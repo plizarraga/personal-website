@@ -98,6 +98,7 @@ export function caseStudyMarkdown(study: CaseStudy): string {
     '',
     study.summary,
     '',
+    ...(study.repository ? [`Source code: ${study.repository.url}`, ''] : []),
     ...study.sections.flatMap((section) => [
       `## ${section.heading}`,
       '',

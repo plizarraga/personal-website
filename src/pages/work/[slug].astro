@@ -58,6 +58,14 @@ const path = caseStudyPath(study.slug);
       <p>{study.stack.join(', ')}</p>
     </section>
 
+    {
+      study.repository && (
+        <p>
+          Source code: <a href={study.repository.url}>{study.repository.label}</a>
+        </p>
+      )
+    }
+
     <p>
       <a href="/experience">Full experience, skills, and projects</a> · <a href={caseStudyMarkdownPath(study.slug)}>Markdown</a>
     </p>

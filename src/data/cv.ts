@@ -252,6 +252,7 @@ export const selectedProjects: Project[] = [
     name: 'starter-template-nestjs',
     start: '2026',
     url: 'https://github.com/plizarraga/starter-template-nestjs',
+    caseStudySlug: 'starter-template-nestjs',
     bullets: [
       'Created a production-ready NestJS 12 starter with Better Auth, PostgreSQL-backed sessions, RBAC, user administration, Prisma, Pino, and Vitest with Testcontainers, to bootstrap new backend projects with consistent best practices.',
     ],
