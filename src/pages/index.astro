@@ -1,8 +1,9 @@
 ---
 import DateRange from '../components/DateRange.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { caseStudies } from '../data/case-studies';
 import { profile, roles, summary } from '../data/cv';
-import { CV_PDF_PATH } from '../lib/site';
+import { CV_PDF_PATH, caseStudyPath } from '../lib/site';
 import { profilePageSchema } from '../lib/structured-data';
 
 const recentRoles = roles.slice(0, 3);
@@ -31,6 +32,23 @@ const recentRoles = roles.slice(0, 3);
   <section aria-labelledby="about">
     <h2 id="about">About</h2>
     {summary.map((paragraph) => <p>{paragraph}</p>)}
+  </section>
+
+  <section aria-labelledby="selected-work">
+    <h2 id="selected-work">Selected work</h2>
+    <ul class="plain-list">
+      {
+        caseStudies.map((study) => (
+          <li>
+            <a href={caseStudyPath(study.slug)}>
+              <strong>{study.title}</strong>
+            </a>
+            <br />
+            {study.summary}
+          </li>
+        ))
+      }
+    </ul>
   </section>
 
   <section aria-labelledby="recent-experience">

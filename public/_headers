@@ -9,6 +9,9 @@ https://:worker.:subdomain.workers.dev/*
 /experience.md
   Content-Type: text/markdown; charset=utf-8
 
+/work/healthcare-platform.md
+  Content-Type: text/markdown; charset=utf-8
+
 /llms.txt
   Content-Type: text/plain; charset=utf-8
 

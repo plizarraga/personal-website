@@ -1,3 +1,4 @@
+import { caseStudies, type CaseStudy } from '../data/case-studies';
 import {
   certifications,
   education,
@@ -10,7 +11,7 @@ import {
   type Project,
 } from '../data/cv';
 import { formatDateRange, formatPartialDate } from './dates';
-import { CV_PDF_PATH, EXPERIENCE_MARKDOWN_PATH, absoluteUrl } from './site';
+import { CV_PDF_PATH, EXPERIENCE_MARKDOWN_PATH, absoluteUrl, caseStudyMarkdownPath, caseStudyPath } from './site';
 
 function bulletList(items: string[]): string[] {
   return items.map((item) => `- ${item}`);
@@ -27,6 +28,9 @@ function projectBlock(project: Project, heading: string): string[] {
     '',
     ...bulletList(project.bullets),
     ...(project.environment ? ['', `Environment: ${project.environment.join(', ')}`] : []),
+    ...(project.caseStudySlug
+      ? ['', `Case study: ${absoluteUrl(caseStudyMarkdownPath(project.caseStudySlug))}`]
+      : []),
     '',
   ];
 }
@@ -82,6 +86,34 @@ export function experienceMarkdown(): string {
   return lines.join('\n');
 }
 
+/** A case study as Markdown, served at `/work/<slug>.md` for LLMs and agents. */
+export function caseStudyMarkdown(study: CaseStudy): string {
+  const status = study.status ? ` (${study.status})` : '';
+  const lines = [
+    `# ${study.title}: case study`,
+    '',
+    `${study.role}, ${study.organization} · ${formatDateRange(study.start, study.end)}${status}${study.note ? ` · ${study.note}` : ''}`,
+    '',
+    `By ${profile.name} · HTML version: ${absoluteUrl(caseStudyPath(study.slug))} · All experience: ${absoluteUrl(EXPERIENCE_MARKDOWN_PATH)}`,
+    '',
+    study.summary,
+    '',
+    ...study.sections.flatMap((section) => [
+      `## ${section.heading}`,
+      '',
+      ...(section.paragraphs ?? []).flatMap((paragraph) => [paragraph, '']),
+      ...(section.steps ? [...section.steps.map((step, i) => `${i + 1}. ${step}`), ''] : []),
+      ...(section.bullets ? [...bulletList(section.bullets), ''] : []),
+    ]),
+    '## Stack',
+    '',
+    study.stack.join(', '),
+    '',
+  ];
+
+  return lines.join('\n');
+}
+
 /** The `/llms.txt` index, following the llmstxt.org proposal. */
 export function llmsTxt(): string {
   return [
@@ -95,6 +127,12 @@ export function llmsTxt(): string {
     '',
     `- [Experience](${absoluteUrl(EXPERIENCE_MARKDOWN_PATH)}): full CV in Markdown, with skills, roles, projects, certifications, and education`,
     `- [CV (PDF)](${absoluteUrl(CV_PDF_PATH)}): the same CV as a two-page PDF`,
+    '',
+    '## Case studies',
+    '',
+    ...caseStudies.map(
+      (study) => `- [${study.title}](${absoluteUrl(caseStudyMarkdownPath(study.slug))}): ${study.summary}`,
+    ),
     '',
     '## Profiles',
     '',

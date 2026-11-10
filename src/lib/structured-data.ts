@@ -1,5 +1,6 @@
 import { certifications, education, knowsAbout, lastUpdated, profile } from '../data/cv';
-import { SITE_URL, absoluteUrl } from './site';
+import type { CaseStudy } from '../data/case-studies';
+import { SITE_URL, absoluteUrl, caseStudyPath } from './site';
 
 type JsonLd = Record<string, unknown>;
 
@@ -59,6 +60,24 @@ export function webPageSchema(path: string, name: string): JsonLd {
     name,
     dateModified: lastUpdated,
     about: personSchema(),
+  };
+}
+
+/** `Article` for a case study, written by Pedro. */
+export function caseStudySchema(study: CaseStudy): JsonLd {
+  const url = absoluteUrl(caseStudyPath(study.slug));
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${study.title}: case study`,
+    description: study.summary,
+    url,
+    mainEntityOfPage: url,
+    dateModified: lastUpdated,
+    inLanguage: 'en',
+    keywords: study.stack,
+    author: personSchema(),
   };
 }
 

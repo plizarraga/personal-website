@@ -20,6 +20,8 @@ export interface Project {
   /** `null` means the project is ongoing; omit it for a single date. */
   end?: PartialDate | null;
   url?: string;
+  /** Slug of the case study that tells this project in full, if there is one. */
+  caseStudySlug?: string;
   bullets: string[];
   environment?: string[];
 }
@@ -145,6 +147,7 @@ export const roles: Role[] = [
         name: 'Healthcare Platform',
         start: '2024-03',
         end: '2026-08',
+        caseStudySlug: 'healthcare-platform',
         bullets: [
           'Built GraphQL and Node.js services in TypeScript for a patient-facing healthcare web and mobile app (doctor search, appointments, lab results, notifications, dependents), owning the doctor search and details subgraph, system notifications, and caching in an Apollo Federation graph.',
           'Integrated Epic FHIR APIs (Practitioner, Patient, Appointment, DiagnosticReport, Observation, plus lab tests and medications), parsing source payloads into normalized domain models and joining Epic data with other subgraphs.',

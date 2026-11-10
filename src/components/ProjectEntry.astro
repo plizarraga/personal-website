@@ -1,5 +1,6 @@
 ---
 import type { Project } from '../data/cv';
+import { caseStudyPath } from '../lib/site';
 import DateRange from './DateRange.astro';
 
 interface Props {
@@ -22,4 +23,11 @@ const Heading = `h${level}` as const;
     {project.bullets.map((bullet) => <li>{bullet}</li>)}
   </ul>
   {project.environment && <p class="env">Environment: {project.environment.join(', ')}</p>}
+  {
+    project.caseStudySlug && (
+      <p>
+        <a href={caseStudyPath(project.caseStudySlug)}>Read the case study</a>
+      </p>
+    )
+  }
 </section>
