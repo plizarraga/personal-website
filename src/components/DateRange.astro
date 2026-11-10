@@ -1,0 +1,20 @@
+---
+import type { PartialDate } from '../data/cv';
+import { formatPartialDate } from '../lib/dates';
+
+interface Props {
+  start: PartialDate;
+  /** `null` renders "Present"; omit it to render the start date alone. */
+  end?: PartialDate | null;
+}
+
+const { start, end } = Astro.props;
+---
+
+<time datetime={start}>{formatPartialDate(start)}</time>{
+  end !== undefined && (
+    <>
+      –{end === null ? 'Present' : <time datetime={end}>{formatPartialDate(end)}</time>}
+    </>
+  )
+}

@@ -1,0 +1,16 @@
+---
+import { lastUpdated, profile } from '../data/cv';
+import { formatDay } from '../lib/dates';
+---
+
+<footer class="site-footer" id="contact">
+  <div class="container">
+    <h2>Contact</h2>
+    <ul class="inline-list">
+      <li><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
+      <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
+      <li><a href={profile.github.url} rel="me">{profile.github.label}</a></li>
+    </ul>
+    <p class="meta">Last updated <time datetime={lastUpdated}>{formatDay(lastUpdated)}</time></p>
+  </div>
+</footer>

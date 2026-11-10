@@ -1,0 +1,52 @@
+---
+import DateRange from '../components/DateRange.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { profile, roles, summary } from '../data/cv';
+import { CV_PDF_PATH } from '../lib/site';
+import { profilePageSchema } from '../lib/structured-data';
+
+const recentRoles = roles.slice(0, 3);
+---
+
+<BaseLayout
+  title={`${profile.name} · Senior Software Engineer, Full-Stack`}
+  description={`${profile.shortBio} Recent work: healthcare platforms on Epic FHIR and AI agents.`}
+  path="/"
+  ogType="profile"
+  jsonLd={profilePageSchema()}
+>
+  <section aria-labelledby="name">
+    <h1 id="name">{profile.name}</h1>
+    <p class="headline">{profile.headline}</p>
+    <p class="lede">{profile.differentiators}</p>
+    <p class="meta">{profile.location} · {profile.workMode}</p>
+    <ul class="inline-list" aria-label="Contact and CV">
+      <li><a href={`mailto:${profile.email}`}>Email me</a></li>
+      <li><a href={CV_PDF_PATH} download>Download CV (PDF)</a></li>
+      <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
+      <li><a href={profile.github.url} rel="me">{profile.github.label}</a></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="about">
+    <h2 id="about">About</h2>
+    {summary.map((paragraph) => <p>{paragraph}</p>)}
+  </section>
+
+  <section aria-labelledby="recent-experience">
+    <h2 id="recent-experience">Recent experience</h2>
+    <ul class="plain-list">
+      {
+        recentRoles.map((role) => (
+          <li>
+            <strong>{role.title}</strong>, {role.company}{' '}
+            <span class="meta nowrap">
+              · <DateRange start={role.start} end={role.end} />
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+    <p><a href="/experience">Full experience, skills, and projects</a></p>
+  </section>
+</BaseLayout>

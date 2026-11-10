@@ -1,0 +1,9 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { profile } from '../data/cv';
+---
+
+<BaseLayout title={`Page not found · ${profile.name}`} description="This page does not exist.">
+  <h1>Page not found</h1>
+  <p>This page does not exist. Go to the <a href="/">home page</a> or see my <a href="/experience">experience</a>.</p>
+</BaseLayout>

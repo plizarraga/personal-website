@@ -1,0 +1,210 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fcfcfb;
+  --fg: #1d1d1b;
+  --muted: #5c5c57;
+  --border: #e3e3de;
+  --accent: #0a58a6;
+  --measure: 68ch;
+
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-size: 112.5%;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #151514;
+    --fg: #ebebe6;
+    --muted: #a2a29b;
+    --border: #2f2f2c;
+    --accent: #7cb5ff;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+.container {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg);
+}
+
+.skip-link:focus {
+  top: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.25;
+  margin: 0 0 0.5rem;
+  text-wrap: balance;
+}
+
+h1 {
+  font-size: clamp(2rem, 1.4rem + 3vw, 2.75rem);
+  letter-spacing: -0.02em;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin-top: 2.75rem;
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin-top: 2.25rem;
+}
+
+h4 {
+  font-size: 1rem;
+  margin-top: 1.5rem;
+}
+
+p,
+ul {
+  margin: 0 0 1rem;
+}
+
+ul {
+  padding-left: 1.25rem;
+}
+
+li + li {
+  margin-top: 0.35rem;
+}
+
+main {
+  padding-block: 2.5rem 3rem;
+}
+
+/* Header and footer */
+
+.site-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.site-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 1.25rem;
+  padding-block: 0.9rem;
+}
+
+.site-header a {
+  padding-block: 0.25rem;
+}
+
+.site-header .home {
+  margin-right: auto;
+  font-weight: 650;
+  color: var(--fg);
+  text-decoration: none;
+}
+
+.site-header a[aria-current='page'] {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+/* Font sizes go on the children: a smaller font on `.container` would shrink its `ch`-based width. */
+.site-footer {
+  border-top: 1px solid var(--border);
+  padding-block: 2rem;
+}
+
+.site-footer ul {
+  font-size: 0.95rem;
+}
+
+.site-footer h2 {
+  margin-top: 0;
+  font-size: 1.05rem;
+}
+
+/* Shared pieces */
+
+.headline {
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.lede {
+  font-size: 1.1rem;
+}
+
+.meta,
+.env {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.meta {
+  margin-bottom: 0.5rem;
+}
+
+.inline-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.inline-list li + li {
+  margin-top: 0;
+}
+
+.inline-list a {
+  display: inline-block;
+  padding-block: 0.25rem;
+}
+
+.plain-list {
+  padding: 0;
+  list-style: none;
+}
+
+.nowrap {
+  white-space: nowrap;
+}

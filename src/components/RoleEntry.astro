@@ -1,0 +1,27 @@
+---
+import type { Role } from '../data/cv';
+import DateRange from './DateRange.astro';
+import ProjectEntry from './ProjectEntry.astro';
+
+interface Props {
+  role: Role;
+}
+
+const { role } = Astro.props;
+---
+
+<article>
+  <h3>{role.title} · {role.company}</h3>
+  <p class="meta"><DateRange start={role.start} end={role.end} /> · {role.location}</p>
+  {
+    role.bullets.length > 0 && (
+      <ul>
+        {role.bullets.map((bullet) => (
+          <li>{bullet}</li>
+        ))}
+      </ul>
+    )
+  }
+  {role.projects.map((project) => <ProjectEntry project={project} level={4} />)}
+  {role.environment && <p class="env">Environment: {role.environment.join(', ')}</p>}
+</article>

@@ -1,0 +1,25 @@
+---
+import type { Project } from '../data/cv';
+import DateRange from './DateRange.astro';
+
+interface Props {
+  project: Project;
+  /** Heading level, so the entry fits under a role (h4) or a section (h3). */
+  level: 3 | 4;
+}
+
+const { project, level } = Astro.props;
+const Heading = `h${level}` as const;
+---
+
+<section>
+  <Heading>
+    {project.url ? <a href={project.url}>{project.name}</a> : project.name}
+    {project.status && <span class="meta"> ({project.status})</span>}
+  </Heading>
+  <p class="meta"><DateRange start={project.start} end={project.end} /></p>
+  <ul>
+    {project.bullets.map((bullet) => <li>{bullet}</li>)}
+  </ul>
+  {project.environment && <p class="env">Environment: {project.environment.join(', ')}</p>}
+</section>

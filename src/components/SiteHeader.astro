@@ -1,0 +1,25 @@
+---
+import { profile } from '../data/cv';
+
+interface Props {
+  /** Path of the current page, to mark its navigation link. */
+  currentPath?: string;
+}
+
+const { currentPath } = Astro.props;
+const links = [{ href: '/experience', label: 'Experience' }];
+---
+
+<header class="site-header">
+  <nav class="container" aria-label="Main">
+    <a class="home" href="/" aria-current={currentPath === '/' ? 'page' : undefined}>{profile.name}</a>
+    {
+      links.map((link) => (
+        <a href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>
+          {link.label}
+        </a>
+      ))
+    }
+    <a href="#contact">Contact</a>
+  </nav>
+</header>

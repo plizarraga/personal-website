@@ -1,0 +1,95 @@
+---
+import ProjectEntry from '../components/ProjectEntry.astro';
+import RoleEntry from '../components/RoleEntry.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import {
+  certifications,
+  education,
+  profile,
+  roles,
+  selectedProjects,
+  skills,
+  spokenLanguages,
+  summary,
+} from '../data/cv';
+import { formatPartialDate } from '../lib/dates';
+import { CV_PDF_PATH, EXPERIENCE_MARKDOWN_PATH } from '../lib/site';
+import { webPageSchema } from '../lib/structured-data';
+
+const title = `Experience · ${profile.name}, Senior Software Engineer`;
+---
+
+<BaseLayout
+  title={title}
+  description={`Full CV of ${profile.name}, Senior Software Engineer: experience at Publicis Sapient and Fender, skills, projects, certifications, and education.`}
+  path="/experience"
+  jsonLd={webPageSchema('/experience', title)}
+  markdownPath={EXPERIENCE_MARKDOWN_PATH}
+>
+  <h1>Experience</h1>
+  <p class="lede">
+    My full CV, also available as a <a href={CV_PDF_PATH} download>PDF</a> and as <a href={EXPERIENCE_MARKDOWN_PATH}
+      >Markdown</a
+    >. I'm based in {profile.location}, and I work remotely.
+  </p>
+
+  <section aria-labelledby="summary">
+    <h2 id="summary">Summary</h2>
+    {summary.map((paragraph) => <p>{paragraph}</p>)}
+  </section>
+
+  <section aria-labelledby="skills">
+    <h2 id="skills">Skills</h2>
+    <ul>
+      {
+        skills.map((group) => (
+          <li>
+            <strong>{group.label}:</strong> {group.items.join(', ')}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="roles">
+    <h2 id="roles">Professional experience</h2>
+    {roles.map((role) => <RoleEntry role={role} />)}
+  </section>
+
+  <section aria-labelledby="projects">
+    <h2 id="projects">Selected projects</h2>
+    {selectedProjects.map((project) => <ProjectEntry project={project} level={3} />)}
+  </section>
+
+  <section aria-labelledby="certifications">
+    <h2 id="certifications">Certifications</h2>
+    <ul>
+      {
+        certifications.map((c) => (
+          <li>
+            {c.name} · {c.issuer}
+            {c.date && (
+              <>
+                {' · '}
+                <time datetime={c.date}>{formatPartialDate(c.date)}</time>
+              </>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section aria-labelledby="education">
+    <h2 id="education">Education</h2>
+    <p>
+      {education.degree} · {education.institution} · {education.location} ·
+      <time datetime={education.start}>{education.start}</time>–<time datetime={education.end}>{education.end}</time>
+    </p>
+  </section>
+
+  <section aria-labelledby="languages">
+    <h2 id="languages">Languages</h2>
+    <p>{spokenLanguages.join(', ')}</p>
+  </section>
+</BaseLayout>
