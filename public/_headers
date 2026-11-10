@@ -12,6 +12,9 @@ https://:worker.:subdomain.workers.dev/*
 /work/healthcare-platform.md
   Content-Type: text/markdown; charset=utf-8
 
+/work/ai-appointment-agent.md
+  Content-Type: text/markdown; charset=utf-8
+
 /llms.txt
   Content-Type: text/plain; charset=utf-8
 
