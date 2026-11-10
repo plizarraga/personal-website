@@ -161,7 +161,7 @@ Esqueleto del JSON-LD del home. Los valores definitivos salen del master:
 | Framework | Astro, salida estática | La versión mayor actual es la 7. Un sitio 100 % estático no necesita adapter |
 | Hosting | Cloudflare Workers Static Assets | Cloudflare recomienda Workers en lugar de Pages para proyectos nuevos. Basta un `wrangler.jsonc` con `assets.directory: "./dist"` y `not_found_handling: "404-page"` |
 | Dominio | `pedrolizarraga.com` en Cloudflare Registrar | Precio de costo al registrar y renovar, privacidad WHOIS gratis y DNS obligatorio de Cloudflare. Activar 2FA en la cuenta |
-| Correo | Cloudflare Email Routing: `hello@` → Gmail | Las respuestas salen desde Gmail, salvo que configures "send as" con otro SMTP |
+| Correo | Cloudflare Email Routing: `hello@` → Gmail, en el plan Free | Gratis y solo de entrada: las respuestas salen desde Gmail. Responder como `hello@` requiere Email Sending por SMTP, que pide el plan Workers Paid (5 USD al mes). Se decide al final (2026-11-10) |
 | Analítica | Cloudflare Web Analytics | Sin cookies ni banner |
 | Consolas | Google Search Console (propiedad de dominio vía DNS) y Bing Webmaster Tools (importable desde Search Console) | |
 | Código | Repo público en GitHub | Muestra de código, sin secretos |

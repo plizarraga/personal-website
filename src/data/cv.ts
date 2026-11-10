@@ -85,7 +85,7 @@ export const skills: SkillGroup[] = [
   },
   {
     label: 'APIs & Architecture',
-    items: ['GraphQL', 'Apollo Server', 'REST', 'system design', 'software architecture', 'design patterns'],
+    items: ['GraphQL', 'Apollo Server', 'Apollo Federation', 'REST', 'system design', 'software architecture', 'design patterns'],
   },
   {
     label: 'Databases',
@@ -105,7 +105,7 @@ export const skills: SkillGroup[] = [
   },
   {
     label: 'Healthcare',
-    items: ['FHIR', 'HL7', 'Epic FHIR', 'healthcare data transformation, mapping, and normalization'],
+    items: ['HL7 FHIR', 'Epic FHIR', 'healthcare data transformation, mapping, and normalization'],
   },
 ];
 
@@ -146,13 +146,13 @@ export const roles: Role[] = [
         start: '2024-03',
         end: '2026-08',
         bullets: [
-          'Built GraphQL and Node.js services in TypeScript that give healthcare web and mobile products a consistent interface to clinical data.',
-          'Integrated Epic FHIR and other FHIR/HL7 APIs, translating source payloads into normalized domain models for reliable downstream use.',
-          'Designed PostgreSQL data models, GraphQL schemas, and resolver patterns, and optimized queries and API behavior for maintainability and dependable performance.',
+          'Built GraphQL and Node.js services in TypeScript for a patient-facing healthcare web and mobile app (doctor search, appointments, lab results, notifications, dependents), owning the doctor search and details subgraph, system notifications, and caching in an Apollo Federation graph.',
+          'Integrated Epic FHIR APIs (Practitioner, Patient, Appointment, DiagnosticReport, Observation, plus lab tests and medications), parsing source payloads into normalized domain models and joining Epic data with other subgraphs.',
+          'Designed PostgreSQL models for notifications, preferences, and a cache of Epic practitioner data that avoids unnecessary Epic calls, plus GraphQL schemas and resolver patterns.',
           'Strengthened delivery quality through Jest and Vitest test suites and cross-functional collaboration with frontend, mobile, QA, product, and engineering teams.',
-          'Migrated Android and iOS build and deployment workflows from GitHub Actions to Bitrise, consolidating mobile CI/CD processes.',
+          'Helped the React Native mobile team migrate Android and iOS build and deployment pipelines from GitHub Actions to Bitrise.',
         ],
-        environment: ['TypeScript', 'Node.js', 'Apollo Server', 'GraphQL', 'PostgreSQL', 'Epic FHIR', 'FHIR', 'HL7', 'Jest', 'Vitest', 'GitHub Actions', 'Bitrise'],
+        environment: ['TypeScript', 'Node.js', 'Apollo Server', 'Apollo Federation', 'GraphQL', 'PostgreSQL', 'Epic FHIR', 'Jest', 'Vitest', 'GitHub Actions', 'Bitrise'],
       },
       {
         name: 'Document Search API',
@@ -298,12 +298,12 @@ export const knowsAbout = [
   'Angular',
   'GraphQL',
   'Apollo Server',
+  'Apollo Federation',
   'PostgreSQL',
   'AWS Lambda',
   'Microsoft Azure',
   'Cloudflare Workers',
   'FHIR',
-  'HL7',
   'AI agents',
   'Vercel AI SDK',
   'RAG',
