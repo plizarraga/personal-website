@@ -14,6 +14,7 @@ const { role } = Astro.props;
 <article class="entry">
   <h3>{role.title} · {role.company}</h3>
   <p class="meta"><DateRange start={role.start} end={role.end} /> · {role.location}</p>
+  {role.projects.map((project) => <ProjectEntry project={project} level={4} />)}
   {
     role.bullets.length > 0 && (
       <ul>
@@ -23,7 +24,6 @@ const { role } = Astro.props;
       </ul>
     )
   }
-  {role.projects.map((project) => <ProjectEntry project={project} level={4} />)}
   {
     role.environment && (
       <p class="env">

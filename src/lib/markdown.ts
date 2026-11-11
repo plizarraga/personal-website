@@ -60,8 +60,8 @@ export function experienceMarkdown(): string {
       '',
       `${formatDateRange(role.start, role.end)} · ${role.location}`,
       '',
-      ...(role.bullets.length > 0 ? [...bulletList(role.bullets), ''] : []),
       ...role.projects.flatMap((project) => projectBlock(project, '####')),
+      ...(role.bullets.length > 0 ? [...bulletList(role.bullets), ''] : []),
       ...(role.environment ? [`Stack: ${role.environment.join(', ')}`, ''] : []),
       ...(role.caseStudySlug
         ? [`Case study: ${absoluteUrl(caseStudyMarkdownPath(role.caseStudySlug))}`, '']
