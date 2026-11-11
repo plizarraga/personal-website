@@ -1,84 +1,64 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { render } from 'astro:content';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DateRange from '@/components/DateRange.astro';
-import { caseStudies } from '@/data/case-studies';
 import { profile } from '@/data/cv';
+import { getCaseStudies } from '@/lib/case-study/collection';
 import { caseStudyMarkdownPath, caseStudyPath } from '@/lib/case-study/paths';
 import { caseStudySchema } from '@/lib/case-study/structured-data';
 
-export const getStaticPaths = (() =>
-  caseStudies.map((study) => ({ params: { slug: study.slug }, props: { study } }))) satisfies GetStaticPaths;
+export const getStaticPaths = (async () =>
+  (await getCaseStudies()).map((study) => ({ params: { slug: study.id }, props: { study } }))) satisfies GetStaticPaths;
 
 const { study } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
-const path = caseStudyPath(study.slug);
+const { data } = study;
+const { Content } = await render(study);
+const path = caseStudyPath(study.id);
 /** The name is dropped from long titles so search results do not truncate them (about 60 characters). */
-const fullTitle = `${study.title}: case study · ${profile.name}`;
-const title = fullTitle.length <= 60 ? fullTitle : `${study.title}: case study`;
+const fullTitle = `${data.title}: case study · ${profile.name}`;
+const title = fullTitle.length <= 60 ? fullTitle : `${data.title}: case study`;
 ---
 
 <BaseLayout
   {title}
-  description={study.summary}
+  description={data.summary}
   {path}
   jsonLd={caseStudySchema(study)}
-  markdownPath={caseStudyMarkdownPath(study.slug)}
+  markdownPath={caseStudyMarkdownPath(study.id)}
 >
   <article>
-    <h1>{study.title}</h1>
+    <h1>{data.title}</h1>
     <p class="meta">
-      <a href="/">{profile.name}</a> · {study.role}, {study.organization} · <span class="nowrap"><DateRange start={study.start} end={study.end} /></span>
-      {study.status && ` (${study.status})`}
-      {study.note && ` · ${study.note}`}
+      <a href="/">{profile.name}</a> · {data.role}, {data.organization} · <span class="nowrap"><DateRange start={data.start} end={data.end} /></span>
+      {data.status && ` (${data.status})`}
+      {data.note && ` · ${data.note}`}
     </p>
-    <p class="lede">{study.summary}</p>
+    <p class="lede">{data.summary}</p>
+
+    <Content />
+
+    <h2 id="stack">Stack</h2>
+    <p class="env">{data.stack.join(', ')}</p>
 
     {
-      study.sections.map((section) => (
-        <section>
-          <h2>{section.heading}</h2>
-          {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
-          {section.steps && (
-            <ol>
-              {section.steps.map((step) => (
-                <li>{step}</li>
-              ))}
-            </ol>
-          )}
-          {section.bullets && (
-            <ul>
-              {section.bullets.map((bullet) => (
-                <li>{bullet}</li>
-              ))}
-            </ul>
-          )}
-        </section>
-      ))
-    }
-
-    <section>
-      <h2>Stack</h2>
-      <p class="env">{study.stack.join(', ')}</p>
-    </section>
-
-    {
-      study.repository && (
+      data.repository && (
         <p>
-          Source code: <a href={study.repository.url}>{study.repository.label}</a>
+          Source code: <a href={data.repository.url}>{data.repository.label}</a>
         </p>
       )
     }
 
     {
-      study.productSite && (
+      data.productSite && (
         <p>
-          Product site: <a href={study.productSite.url}>{study.productSite.label}</a>
+          Product site: <a href={data.productSite.url}>{data.productSite.label}</a>
         </p>
       )
     }
 
     <p class="more-links">
-      <a href="/experience">Full experience, skills, and projects</a> · <a href={caseStudyMarkdownPath(study.slug)}>Markdown</a>
+      <a href="/experience">Full experience, skills, and projects</a> · <a href={caseStudyMarkdownPath(study.id)}>Markdown</a>
     </p>
   </article>
 </BaseLayout>

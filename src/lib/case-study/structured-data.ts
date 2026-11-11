@@ -1,4 +1,4 @@
-import type { CaseStudy } from '@/data/case-studies';
+import type { CaseStudy } from '@/lib/case-study/collection';
 import { caseStudyPath } from '@/lib/case-study/paths';
 import { techNames } from '@/lib/case-study/stack';
 import { personSchema } from '@/lib/cv/structured-data';
@@ -8,18 +8,19 @@ import { absoluteUrl } from '@/lib/site';
 
 /** `Article` for a case study, written by Pedro. */
 export function caseStudySchema(study: CaseStudy): JsonLd {
-  const url = absoluteUrl(caseStudyPath(study.slug));
+  const { data } = study;
+  const url = absoluteUrl(caseStudyPath(study.id));
 
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
-    headline: `${study.title}: case study`,
-    description: study.summary,
+    headline: `${data.title}: case study`,
+    description: data.summary,
     url,
     mainEntityOfPage: url,
     dateModified: lastUpdated,
     inLanguage: 'en',
-    keywords: techNames(study.stack),
+    keywords: techNames(data.stack),
     author: personSchema(),
   };
 }

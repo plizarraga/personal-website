@@ -1,11 +1,12 @@
 import type { APIRoute } from 'astro';
-import { caseStudies } from '@/data/case-studies';
 import { profile } from '@/data/cv';
+import { getCaseStudies } from '@/lib/case-study/collection';
 import { caseStudyMarkdownPath } from '@/lib/case-study/paths';
 import { CV_PDF_PATH, EXPERIENCE_MARKDOWN_PATH, absoluteUrl } from '@/lib/site';
 
 /** The `/llms.txt` index, following the llmstxt.org proposal. */
-function llmsTxt(): string {
+async function llmsTxt(): Promise<string> {
+  const caseStudies = await getCaseStudies();
   return [
     `# ${profile.name}`,
     '',
@@ -21,7 +22,7 @@ function llmsTxt(): string {
     '## Case studies',
     '',
     ...caseStudies.map(
-      (study) => `- [${study.title}](${absoluteUrl(caseStudyMarkdownPath(study.slug))}): ${study.summary}`,
+      (study) => `- [${study.data.title}](${absoluteUrl(caseStudyMarkdownPath(study.id))}): ${study.data.summary}`,
     ),
     '',
     '## Profiles',
@@ -32,4 +33,4 @@ function llmsTxt(): string {
   ].join('\n');
 }
 
-export const GET: APIRoute = () => new Response(llmsTxt());
+export const GET: APIRoute = async () => new Response(await llmsTxt());

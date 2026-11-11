@@ -1,5 +1,5 @@
 ---
-import { caseStudies } from '@/data/case-studies';
+import { getCaseStudy } from '@/lib/case-study/collection';
 import { caseStudyPath } from '@/lib/case-study/paths';
 
 interface Props {
@@ -7,8 +7,7 @@ interface Props {
 }
 
 const { slug } = Astro.props;
-const study = caseStudies.find((candidate) => candidate.slug === slug);
-if (!study) throw new Error(`No case study with the slug "${slug}"`);
+const study = await getCaseStudy(slug);
 ---
 
-<p><a href={caseStudyPath(slug)}>Read the {study.title} case study</a></p>
+<p><a href={caseStudyPath(slug)}>Read the {study.data.title} case study</a></p>
