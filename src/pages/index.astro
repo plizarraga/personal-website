@@ -119,6 +119,13 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
     .actions .main-nav {
       display: list-item;
     }
+
+    /* Space the Main links like the other actions, or they run together ("ExperienceBlog"). */
+    .actions .main-nav nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem 1.25rem;
+    }
   }
 
   .actions .primary {

@@ -38,4 +38,30 @@ const caseStudies = defineCollection({
   }),
 });
 
-export const collections = { caseStudies };
+/** `YYYY-MM-DD`. Quote it in YAML so it stays a string. */
+const day = z.string().regex(/^\d{4}-\d{2}-\d{2}$/);
+
+/**
+ * Blog posts, one Markdown file each, published at `/blog/<file name>`. A post is the owner's own technical writing.
+ * Facts and numbers about a project come from that project's repository (ADRs, commits, issues, measurements) and
+ * the post says where. Never name a client the user keeps private, and never publish client data or real conversations.
+ *
+ * The body is plain Markdown: `##` sections, paragraphs, lists, tables, and fenced code blocks.
+ */
+const posts = defineCollection({
+  loader: glob({ base: './src/content/posts', pattern: '*.md' }),
+  schema: z.object({
+    title: z.string(),
+    /** One or two sentences, used as the meta description, in the blog list, and in `/llms.txt`. At most 160 characters. */
+    summary: z.string().max(160),
+    published: day,
+    /** Date of the last change that matters to a reader. */
+    updated: day.optional(),
+    /** Slug of the case study this post is about, linked from both pages. */
+    caseStudy: z.string().optional(),
+    /** Short technology or topic names, used as JSON-LD keywords. */
+    tags: z.array(z.string()).min(1),
+  }),
+});
+
+export const collections = { caseStudies, posts };

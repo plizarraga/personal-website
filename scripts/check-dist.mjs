@@ -126,6 +126,12 @@ for (const page of pages) {
     fail(where, `broken internal link: ${href}`);
   }
 
+  // Same-page links, such as a post's table of contents, must land on an element with that id.
+  const ids = new Set([...html.matchAll(/\sid="([^"]+)"/g)].map(([, id]) => id));
+  for (const [, id] of html.matchAll(/<a[^>]+href="#([^"]+)"/g)) {
+    if (!ids.has(decodeURIComponent(id))) fail(where, `same-page link has no target: #${id}`);
+  }
+
   // Head resources (icons, Markdown alternate) the page points at.
   for (const [, href] of html.matchAll(/<link[^>]+href="(\/[^"]*)"/g)) {
     if (!exists.has(href.split(/[#?]/)[0])) fail(where, `<link> points at a file missing from dist: ${href}`);

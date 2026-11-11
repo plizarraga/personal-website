@@ -1,70 +1,37 @@
 // Runs axe-core on every page of the built site in `dist/`, in light and dark mode, at desktop and phone widths.
-// Fails on any WCAG 2.2 level A or AA violation, color contrast included.
+// Fails on any WCAG 2.2 level A or AA violation, color contrast included, and on links that touch: two links on the
+// same line with no space between them read as one ("ExperienceBlog"), which axe does not flag.
 // Run after `astro build`: `node scripts/check-a11y.mjs [distDir]`. Exits 1 when any check fails.
 // Needs Chromium once per machine: `pnpm exec playwright install --only-shell chromium`.
-import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
-import { createServer } from 'node:http';
-import { extname, join, relative, resolve, sep } from 'node:path';
 import { AxeBuilder } from '@axe-core/playwright';
-import { chromium } from 'playwright';
-
-const root = new URL('..', import.meta.url).pathname;
-const dist = resolve(root, process.argv[2] ?? 'dist');
+import { COLOR_SCHEMES, VIEWPORTS, distDir, launchChromium, routesOf, serveDist } from './lib/serve-dist.mjs';
 
 const TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa'];
-const VIEWPORTS = { desktop: { width: 1280, height: 800 }, phone: { width: 390, height: 844 } };
-const COLOR_SCHEMES = ['light', 'dark'];
-const CONTENT_TYPES = {
-  '.html': 'text/html; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.woff2': 'font/woff2',
-};
+/** Smallest gap, in CSS pixels, between two links on the same line. A space in the body font is about 4px. */
+const MIN_LINK_GAP = 2;
 
-if (!existsSync(dist)) {
-  console.error(`check-a11y: ${dist} does not exist. Run \`astro build\` first.`);
-  process.exit(1);
-}
+const dist = distDir(process.argv[2], 'check-a11y');
+const routes = routesOf(dist);
+const server = await serveDist(dist);
+const browser = await launchChromium('check-a11y', server.close);
 
-const files = (dir) =>
-  readdirSync(dir).flatMap((name) => {
-    const path = join(dir, name);
-    return statSync(path).isDirectory() ? files(path) : [path];
-  });
-
-// One route per built page: `experience.html` is served at `/experience` (`build.format: 'file'`).
-const routes = files(dist)
-  .filter((path) => path.endsWith('.html'))
-  .map((path) => '/' + relative(dist, path).split(sep).join('/').replace(/\.html$/, '').replace(/(^|\/)index$/, ''))
-  .sort();
-
-// Serves dist/ the way Cloudflare does: `/experience` falls back to `experience.html`.
-const server = createServer((request, response) => {
-  const path = decodeURIComponent(new URL(request.url ?? '/', 'http://localhost').pathname);
-  for (const candidate of [path, `${path}.html`, join(path, 'index.html')]) {
-    const file = join(dist, candidate);
-    if (file.startsWith(dist) && existsSync(file) && statSync(file).isFile()) {
-      response.writeHead(200, { 'content-type': CONTENT_TYPES[extname(file)] ?? 'application/octet-stream' });
-      response.end(readFileSync(file));
-      return;
+/** Pairs of visible links on the same line whose boxes are closer than `minGap`, as "first" + "second" texts. */
+const touchingLinks = (minGap) => {
+  const boxes = [...document.querySelectorAll('a[href]')].flatMap((link) =>
+    [...link.getClientRects()].filter((rect) => rect.width > 0 && rect.height > 0).map((rect) => ({ link, rect })),
+  );
+  const pairs = [];
+  for (const [i, a] of boxes.entries()) {
+    for (const b of boxes.slice(i + 1)) {
+      if (a.link === b.link || a.link.contains(b.link) || b.link.contains(a.link)) continue;
+      const overlap = Math.min(a.rect.bottom, b.rect.bottom) - Math.max(a.rect.top, b.rect.top);
+      if (overlap < Math.min(a.rect.height, b.rect.height) / 2) continue;
+      const gap = Math.max(a.rect.left, b.rect.left) - Math.min(a.rect.right, b.rect.right);
+      if (gap < minGap) pairs.push(`"${a.link.textContent.trim()}" + "${b.link.textContent.trim()}"`);
     }
   }
-  response.writeHead(404).end();
-});
-await new Promise((done) => server.listen(0, '127.0.0.1', done));
-const origin = `http://127.0.0.1:${server.address().port}`;
-
-let browser;
-try {
-  browser = await chromium.launch();
-} catch (error) {
-  server.close();
-  console.error('check-a11y: Chromium is missing. Install it once with `pnpm exec playwright install --only-shell chromium`.');
-  console.error(String(error).split('\n')[0]);
-  process.exit(1);
-}
+  return pairs;
+};
 
 const failures = [];
 for (const [viewportName, viewport] of Object.entries(VIEWPORTS)) {
@@ -72,11 +39,15 @@ for (const [viewportName, viewport] of Object.entries(VIEWPORTS)) {
     const context = await browser.newContext({ viewport, colorScheme });
     const page = await context.newPage();
     for (const route of routes) {
-      await page.goto(origin + route);
+      await page.goto(server.origin + route);
+      const where = `${route} (${viewportName}, ${colorScheme})`;
       const { violations } = await new AxeBuilder({ page }).withTags(TAGS).analyze();
       for (const violation of violations) {
         const targets = violation.nodes.map((node) => node.target.join(' ')).join(', ');
-        failures.push(`${route} (${viewportName}, ${colorScheme}): ${violation.id}: ${violation.help}. Elements: ${targets}`);
+        failures.push(`${where}: ${violation.id}: ${violation.help}. Elements: ${targets}`);
+      }
+      for (const pair of await page.evaluate(touchingLinks, MIN_LINK_GAP)) {
+        failures.push(`${where}: link-spacing: links touch and read as one: ${pair}`);
       }
     }
     await context.close();

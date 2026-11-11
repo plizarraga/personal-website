@@ -295,3 +295,81 @@ main {
 .nowrap {
   white-space: nowrap;
 }
+
+/* Post bodies: code and tables. Code keeps its line breaks and scrolls sideways; Shiki gives each block
+   `tabindex="0"`, so the keyboard can scroll it too. */
+.post code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+}
+
+.post pre {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre;
+  line-height: 1.45;
+}
+
+.post pre code {
+  font-size: 0.8rem;
+}
+
+/* Syntax colors from the Shiki themes in astro.config.mjs, on the site's own background. */
+.post .astro-code,
+.post .astro-code span {
+  color: var(--shiki-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  .post .astro-code,
+  .post .astro-code span {
+    color: var(--shiki-dark);
+  }
+}
+
+.post table {
+  width: 100%;
+  margin: 0 0 1rem;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.post th,
+.post td {
+  padding: 0.35rem 0.5rem 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+}
+
+/* A post's table of contents: its `##` sections, as a compact numbered list between the lede and the body. */
+.toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid var(--border);
+}
+
+.toc .toc-title {
+  margin: 0 0 0.4rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.95rem;
+}
+
+/* Inline links, so the number lines up with a title that wraps; the item padding keeps the tap target. */
+.toc li {
+  padding-block: 0.2rem;
+}

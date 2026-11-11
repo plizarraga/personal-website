@@ -2,11 +2,14 @@ import type { APIRoute } from 'astro';
 import { profile } from '@/data/cv';
 import { getCaseStudies } from '@/lib/case-study/collection';
 import { caseStudyMarkdownPath } from '@/lib/case-study/paths';
+import { getPosts } from '@/lib/post/collection';
+import { postMarkdownPath } from '@/lib/post/paths';
 import { CV_PDF_PATH, EXPERIENCE_MARKDOWN_PATH, absoluteUrl } from '@/lib/site';
 
 /** The `/llms.txt` index, following the llmstxt.org proposal. */
 async function llmsTxt(): Promise<string> {
   const caseStudies = await getCaseStudies();
+  const posts = await getPosts();
   return [
     `# ${profile.name}`,
     '',
@@ -24,6 +27,10 @@ async function llmsTxt(): Promise<string> {
     ...caseStudies.map(
       (study) => `- [${study.data.title}](${absoluteUrl(caseStudyMarkdownPath(study.id))}): ${study.data.summary}`,
     ),
+    '',
+    '## Blog',
+    '',
+    ...posts.map((post) => `- [${post.data.title}](${absoluteUrl(postMarkdownPath(post.id))}): ${post.data.summary}`),
     '',
     '## Profiles',
     '',

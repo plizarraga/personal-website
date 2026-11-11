@@ -33,7 +33,7 @@ _Avoid_: sector, industry, vertical, niche, finance (say electronic invoicing)
 ## Content
 
 **CV Master**:
-Pedro's master CV, the single source of every fact on the site. A fact, metric, or technology absent from the CV Master does not appear on the site.
+Pedro's master CV, the single source of every fact in the CV and the Case studies. A fact, metric, or technology absent from the CV Master does not appear there. Posts are the exception: they cite their Project's repository.
 _Avoid_: base CV, main CV, resume
 
 **Role**:
@@ -47,3 +47,19 @@ _Avoid_: portfolio item, product
 **Case study**:
 A page that explains one project in depth (context, Pedro's role, decisions, outcome), built only from CV Master facts.
 _Avoid_: portfolio item, project page, post, article
+
+**Post**:
+An article on the blog, written by Pedro, about one decision in a Project: what he chose, what it cost, and what went wrong. Its facts come from the Project's repository, not from the CV Master. A Post goes deeper than its Case study and links to it; it does not repeat it.
+_Avoid_: article, entry, case study
+
+**Draft**:
+A Post still being written or reviewed. It has no Publication date and does not exist on the site.
+_Avoid_: unpublished post, WIP
+
+**Scheduled post**:
+A finished Post whose Publication date has not arrived yet. It appears on the site on that date, with no further edit.
+_Avoid_: queued post, pending post
+
+**Publication date**:
+The day a Post appears on the site, not the day it was written.
+_Avoid_: post date, created date
