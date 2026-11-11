@@ -9,9 +9,10 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
-    "build": "astro check && astro build",
+    "build": "astro check && astro build && node scripts/check-dist.mjs",
+    "check:dist": "node scripts/check-dist.mjs",
     "preview": "astro build && wrangler dev",
-    "deploy": "astro build && wrangler deploy",
+    "deploy": "astro build && node scripts/check-dist.mjs && wrangler deploy",
     "og-image": "node scripts/og-image.mjs"
   },
   "dependencies": {

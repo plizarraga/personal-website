@@ -4,12 +4,13 @@ import DateRange from '../components/DateRange.astro';
 import { caseStudies } from '../data/case-studies';
 import { profile, roles, summary } from '../data/cv';
 import { CV_PDF_PATH, caseStudyPath } from '../lib/site';
+import { techNames } from '../lib/stack';
 import { profilePageSchema } from '../lib/structured-data';
 
 const recentRoles = roles.slice(0, 3);
 const agent = caseStudies.find((study) => study.slug === 'ai-appointment-agent');
-/** Short stack line: skips the long multi-provider entry and keeps the first seven items. */
-const stackLine = (stack: string[]) => stack.filter((item) => item.length < 24).slice(0, 7).join(', ');
+/** Short stack line: the first seven technology names. */
+const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
 ---
 
 <BaseLayout
