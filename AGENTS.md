@@ -2,6 +2,8 @@
 
 Read [`README.md`](README.md) before changing the site: its "Content rules" section says where every fact comes from, and [`GLOSSARY.md`](GLOSSARY.md) defines the terms used in code and content.
 
+Cloudflare and search-console settings live outside the repo. Read the live zone state through the Cloudflare MCP before advising on it, and record every change in the table under README "Deployment" in the same change.
+
 ## Dependabot
 
 [`.github/dependabot.yml`](.github/dependabot.yml) opens PRs every Monday: one group for production minor and patch updates, one for development minor and patch updates, one PR per major update, and one per GitHub Action. CI (`pnpm build`) is the merge gate.

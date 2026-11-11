@@ -8,7 +8,7 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 
 ## Features
 
-- **Static HTML, no JavaScript of its own**: every page is plain HTML and CSS. The only script is the Cloudflare Web Analytics beacon, which Cloudflare injects when it serves each page.
+- **Static HTML, no JavaScript of its own**: every page is plain HTML and CSS. The only scripts are the ones Cloudflare injects when it serves each page: the Web Analytics beacon and the Bot Fight Mode JavaScript Detections. See [Deployment](#deployment).
 - **Built for search crawlers**: canonical URLs, a generated sitemap, an open `robots.txt`, and JSON-LD (`Person`, `ProfilePage`, `Article`).
 - **Built for LLMs**: a [`/llms.txt`](https://pedrolizarraga.com/llms.txt) index and a Markdown copy of every page, such as [`/experience.md`](https://pedrolizarraga.com/experience.md).
 - **One source of truth**: every fact comes from the owner's CV Master. See [Content rules](#content-rules).
@@ -154,8 +154,13 @@ Everything outside the code lives in Cloudflare and the search consoles:
 | `www` redirect | Cloudflare Redirect Rule "Redirect www to root" | 301 to `https://pedrolizarraga.com`, keeping the path and query string |
 | HTTPS | Cloudflare "Always Use HTTPS" | 301 from `http://` to `https://`, keeping the path and query string |
 | Email | Cloudflare Email Routing | `hello@pedrolizarraga.com` forwards to the owner's inbox. Receive only; the catch-all is off |
-| Analytics | Cloudflare Web Analytics | Beacon injected automatically, no cookies. No click events or UTM tracking. Injection stops if HTML responses send `Cache-Control: no-transform` |
+| Analytics | Cloudflare Web Analytics | Beacon injected automatically, no cookies. No click events or UTM tracking |
+| Bots | Cloudflare Bot Fight Mode, with JavaScript Detections | Challenges known bad bots; verified crawlers such as Googlebot and Bingbot pass. Bot Fight Mode requires JavaScript Detections. AI crawlers are allowed: "Block AI bots" and the Cloudflare-managed `robots.txt` are off |
+| Speed | Cloudflare Speed Brain and 0-RTT | Speed Brain prefetches the likely next page through a `Speculation-Rules` header; 0-RTT resumes TLS connections for returning visitors |
 | Search | Google Search Console (domain property) and Bing Webmaster Tools | `sitemap-index.xml` submitted to both |
+
+> [!WARNING]
+> The Web Analytics beacon and the JavaScript Detections script reach the page only because Cloudflare can inject them into the HTML. A `Content-Security-Policy` in `public/_headers` must allow the beacon from `static.cloudflareinsights.com` and the inline JavaScript Detections script, which loads more from `/cdn-cgi/challenge-platform/`. HTML responses must not send `Cache-Control: no-transform`, or both scripts stop without any error.
 
 > [!WARNING]
 > Keep these DNS records: the `google-site-verification` TXT record on the apex, the Bing `<id>.pedrolizarraga.com` CNAME to `verify.bing.com`, and the Email Routing MX, SPF, and DKIM records. Deleting a verification record un-verifies the site in that console. Each verification record has a comment in Cloudflare that says what it is for.
