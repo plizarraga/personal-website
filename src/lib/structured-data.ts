@@ -1,6 +1,7 @@
 import { certifications, education, knowsAbout, lastUpdated, profile } from '../data/cv';
 import type { CaseStudy } from '../data/case-studies';
 import { SITE_URL, absoluteUrl, caseStudyPath } from './site';
+import { techNames } from './stack';
 
 type JsonLd = Record<string, unknown>;
 
@@ -76,7 +77,7 @@ export function caseStudySchema(study: CaseStudy): JsonLd {
     mainEntityOfPage: url,
     dateModified: lastUpdated,
     inLanguage: 'en',
-    keywords: study.stack,
+    keywords: techNames(study.stack),
     author: personSchema(),
   };
 }
