@@ -10,10 +10,11 @@
   "scripts": {
     "dev": "astro dev",
     "check": "astro check",
-    "build": "astro check && astro build && node scripts/check-dist.mjs",
+    "build": "astro check && astro build && node scripts/check-dist.mjs && node scripts/check-a11y.mjs",
     "check:dist": "node scripts/check-dist.mjs",
+    "check:a11y": "node scripts/check-a11y.mjs",
     "preview": "astro build && wrangler dev",
-    "deploy": "astro build && node scripts/check-dist.mjs && wrangler deploy",
+    "deploy": "astro build && node scripts/check-dist.mjs && node scripts/check-a11y.mjs && wrangler deploy",
     "og-image": "node scripts/og-image.mjs"
   },
   "dependencies": {
@@ -23,6 +24,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
+    "@axe-core/playwright": "^4.14.0",
+    "playwright": "^1.65.0",
     "sharp": "^0.35.5",
     "typescript": "^6.0.3",
     "wrangler": "^4.159.0"

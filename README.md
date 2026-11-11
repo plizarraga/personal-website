@@ -12,6 +12,7 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 - **Built for search crawlers**: canonical URLs, a generated sitemap, an open `robots.txt`, and JSON-LD (`Person`, `ProfilePage`, `Article`).
 - **Built for LLMs**: a [`/llms.txt`](https://pedrolizarraga.com/llms.txt) index and a Markdown copy of every page, such as [`/experience.md`](https://pedrolizarraga.com/experience.md).
 - **One source of truth**: every fact comes from the owner's CV Master. See [Content rules](#content-rules).
+- **Checked for accessibility on every build**: each page passes axe-core's WCAG 2.2 A and AA rules, including color contrast, in light and dark mode at desktop and phone widths.
 - **Document-style design**: one column, system fonts, one accent color, and automatic dark mode.
 
 ## Tech stack
@@ -23,6 +24,7 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | Sitemap | `@astrojs/sitemap` |
 | Hosting | Cloudflare Workers static assets, deployed with Wrangler 4 |
 | Open Graph image | `sharp`, run by [`scripts/og-image.mjs`](scripts/og-image.mjs) |
+| Accessibility check | `axe-core` in headless Chromium through Playwright, run by [`scripts/check-a11y.mjs`](scripts/check-a11y.mjs) |
 
 ## Quick Start
 
@@ -46,6 +48,12 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
    pnpm install
    ```
 
+   Then install the headless Chromium that `pnpm build` uses for the accessibility check (once per machine):
+
+   ```bash
+   pnpm exec playwright install --only-shell chromium
+   ```
+
 3. Start the dev server:
 
    ```bash
@@ -60,8 +68,9 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | --- | --- |
 | `pnpm dev` | Dev server with hot reload |
 | `pnpm check` | Type-checks `.astro` and `.ts` files |
-| `pnpm build` | Runs `astro check`, builds the site into `dist/`, then runs `check:dist` |
+| `pnpm build` | Runs `astro check`, builds the site into `dist/`, then runs `check:dist` and `check:a11y` |
 | `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, canonicals, JSON-LD, sitemap, Markdown copies, internal links |
+| `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
 | `pnpm run deploy` | Builds and deploys to production (see [Deployment](#deployment)) |
 | `pnpm og-image` | Regenerates `public/og.png` after a change to the name, Headline, Differentiators, or Domains |
@@ -97,7 +106,7 @@ Every change to the site's text follows these rules. Terms in bold are defined i
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicon, og.png, CV PDF
-├── scripts/               # og-image.mjs (public/og.png) and check-dist.mjs (checks dist/ after each build)
+├── scripts/               # og-image.mjs (public/og.png) and check-dist.mjs and check-a11y.mjs (check dist/ after each build)
 ├── src/
 │   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
 │   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter
@@ -134,7 +143,7 @@ The site has no environment variables. These files hold the settings you may cha
 
 ## Deployment
 
-Deploys are manual: CI (`.github/workflows/ci.yml`) runs `pnpm build` on every pull request but does not deploy. `pnpm run deploy` runs `check:dist` before it ships, and needs a Wrangler session (`wrangler login`) with access to the owner's Cloudflare account. Use `pnpm run deploy`, not `pnpm deploy`: `pnpm deploy` is a different, built-in pnpm command.
+Deploys are manual: CI (`.github/workflows/ci.yml`) runs `pnpm build` on every pull request but does not deploy. `pnpm run deploy` runs `check:dist` and `check:a11y` before it ships, and needs a Wrangler session (`wrangler login`) with access to the owner's Cloudflare account. Use `pnpm run deploy`, not `pnpm deploy`: `pnpm deploy` is a different, built-in pnpm command.
 
 Everything outside the code lives in Cloudflare and the search consoles:
 
@@ -157,4 +166,4 @@ This is a personal site maintained by its owner. Changes go through a pull reque
 
 - Branch names follow `type/description`, such as `feat/new-case-study`.
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org).
-- Run `pnpm build` before opening a PR; it runs `astro check` first and `check:dist` last. CI runs the same command.
+- Run `pnpm build` before opening a PR; it runs `astro check` first and `check:dist` and `check:a11y` last. CI runs the same command.
