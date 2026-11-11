@@ -99,6 +99,16 @@ for (const page of pages) {
     if (path === '/' || exists.has(path) || exists.has(`${path}.html`)) continue;
     fail(where, `broken internal link: ${href}`);
   }
+
+  // Head resources (icons, Markdown alternate) the page points at.
+  for (const [, href] of html.matchAll(/<link[^>]+href="(\/[^"]*)"/g)) {
+    if (!exists.has(href.split(/[#?]/)[0])) fail(where, `<link> points at a file missing from dist: ${href}`);
+  }
+}
+
+// Browsers, feed readers and link previews request these at the root even when no page links them.
+for (const icon of ['/favicon.ico', '/apple-touch-icon.png']) {
+  if (!exists.has(icon)) fail(icon, 'missing from dist (run `pnpm icons`)');
 }
 
 // Every indexable page is in the sitemap, and nothing else is.

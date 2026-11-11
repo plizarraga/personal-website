@@ -69,7 +69,7 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | `pnpm dev` | Dev server with hot reload |
 | `pnpm check` | Type-checks `.astro` and `.ts` files |
 | `pnpm build` | Runs `astro check`, builds the site into `dist/`, then runs `check:dist` and `check:a11y` |
-| `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, canonicals, JSON-LD, sitemap, Markdown copies, internal links |
+| `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, canonicals, JSON-LD, sitemap, Markdown copies, internal links, `<link>` files, `favicon.ico` and `apple-touch-icon.png` |
 | `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
 | `pnpm run deploy` | Builds and deploys to production (see [Deployment](#deployment)) |
