@@ -24,5 +24,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      # Type-checks, builds, then runs scripts/check-dist.mjs on the built site.
+      # Headless Chromium for scripts/check-a11y.mjs.
+      - run: pnpm exec playwright install --with-deps --only-shell chromium
+      # Type-checks, builds, then runs scripts/check-dist.mjs and scripts/check-a11y.mjs on the built site.
       - run: pnpm build
