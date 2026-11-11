@@ -141,7 +141,7 @@ export const roles: Role[] = [
     location: 'Remote, Mexicali, Baja California, Mexico',
     start: '2022-05',
     end: '2026-08',
-    bullets: ['Conducted code reviews and mentored and onboarded engineers joining the projects.'],
+    bullets: [],
     projects: [
       {
         name: 'Healthcare Platform',
@@ -153,6 +153,7 @@ export const roles: Role[] = [
           'Integrated Epic FHIR APIs (Practitioner, Patient, Appointment, DiagnosticReport, Observation, plus lab tests and medications), parsing source payloads into normalized domain models and joining Epic data with other subgraphs.',
           'Designed PostgreSQL models for notifications, preferences, and a cache of Epic practitioner data that avoids unnecessary Epic calls, plus GraphQL schemas and resolver patterns.',
           'Strengthened delivery quality through Jest and Vitest test suites and cross-functional collaboration with frontend, mobile, QA, product, and engineering teams.',
+          'Conducted code reviews and mentored and onboarded engineers joining the projects.',
           'Helped the React Native mobile team migrate Android and iOS build and deployment pipelines from GitHub Actions to Bitrise.',
         ],
         environment: ['TypeScript', 'Node.js', 'Apollo Server', 'Apollo Federation', 'GraphQL', 'PostgreSQL', 'Epic FHIR', 'Jest', 'Vitest', 'GitHub Actions', 'Bitrise'],
