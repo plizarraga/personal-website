@@ -29,6 +29,8 @@ export interface CaseStudy {
   note?: string;
   /** Public source code, when the repository is public. */
   repository?: Link;
+  /** Public site of the product, when it has one. */
+  productSite?: Link;
   sections: CaseStudySection[];
   stack: string[];
 }
@@ -109,10 +111,118 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
+    slug: 'dealer-b2b-commerce-platform',
+    title: 'Dealer B2B Commerce Platform',
+    summary:
+      "Fender's dealer-facing B2B commerce platform, where I built core Angular experiences for product discovery, catalog, cart, ordering, and order tracking.",
+    role: 'Senior Frontend Developer',
+    organization: 'Fender Musical Instruments Corporation',
+    start: '2016-10',
+    end: '2022-05',
+    sections: [
+      {
+        heading: 'Context',
+        paragraphs: [
+          "Fender's dealers used a business-to-business commerce platform to find products, browse the catalog, fill a cart, place orders, and follow them after they were placed.",
+          'I worked on this one platform for the whole time I was at Fender, from October 2016 to May 2022.',
+        ],
+      },
+      {
+        heading: 'My role',
+        paragraphs: [
+          'I was a Senior Frontend Developer. My main work was the Angular frontend. I also worked on parts of the endpoints it used, which were serverless Node.js services running on AWS Lambda.',
+        ],
+        bullets: [
+          'I worked with product, backend, and QA in Agile teams to plan, implement, test, and release features for dealers.',
+          'I did code reviews and mentored and onboarded engineers on the team.',
+        ],
+      },
+      {
+        heading: 'What I built',
+        bullets: [
+          'Core experiences of the platform: product discovery, catalog, cart, ordering, and order tracking.',
+          'Improved responsive behavior and navigation across the key journeys.',
+          'The connection between those screens and the serverless Node.js services on AWS Lambda.',
+        ],
+      },
+      {
+        heading: 'How I structured the Angular app',
+        paragraphs: [
+          'I designed the Angular application so that related code stays together and shared code stays small. These were the rules:',
+        ],
+        bullets: [
+          'Business domain first, technical type second. Code was grouped by the business area that owns it, and each screen had its own folder, instead of global folders such as components or services.',
+          'Three top-level areas. The core folder held application-wide infrastructure, the features folder had one folder per business domain, and the shared folder held only code that was reusable across domains and did not depend on any of them.',
+          'Responsibility folders only when needed. A ui folder held presentational components, a data-access folder held API services and state, and a utils folder held pure helpers. I did not create empty folders ahead of time.',
+          'Code lived in the smallest scope that contained all of its users. It moved up to the parent domain, and later to the shared folder, only when real reuse appeared. Sibling screens never depended on each other.',
+        ],
+      },
+      {
+        heading: 'Result',
+        paragraphs: [
+          'I have no measurements I can stand behind, so I describe the result without numbers. Dealers could find products, fill a cart, place orders, and follow them on one platform, and the key journeys had better responsive behavior and navigation.',
+        ],
+      },
+    ],
+    stack: ['Angular', 'TypeScript', 'Node.js', 'Express.js', 'AWS Lambda', 'Amazon S3'],
+  },
+  {
+    slug: 'electronic-invoicing-saas-migration',
+    title: 'Electronic Invoicing SaaS Migration to Rails',
+    summary:
+      "A module-by-module migration of docDigitales' legacy WebDev electronic-invoicing product to Ruby on Rails, with redirects until the legacy app was shut down.",
+    role: 'Senior Full-Stack Developer',
+    organization: 'docDigitales',
+    start: '2014-08',
+    end: '2016-10',
+    productSite: { label: 'docdigitales.com', url: 'https://www.docdigitales.com/' },
+    sections: [
+      {
+        heading: 'Context',
+        paragraphs: [
+          'docDigitales is a SaaS for electronic invoicing. The company already had a legacy version of the product in production, built with WebDev from PC SOFT.',
+          'The product covered invoicing, cost control, payroll, customer, and supplier workflows. The work was to move all of it to Ruby on Rails, one module at a time.',
+        ],
+      },
+      {
+        heading: 'My role',
+        paragraphs: [
+          'I was a Senior Full-Stack Developer from August 2014 to October 2016. I started the new Ruby on Rails application from zero and worked full-stack on all of its modules, until the migration was in production.',
+        ],
+      },
+      {
+        heading: 'How the migration worked',
+        paragraphs: ['We moved the product progressively, so the legacy application kept running while the new one grew:'],
+        steps: [
+          'Rebuild one module at a time in Ruby on Rails.',
+          'Run the new module in parallel with the legacy application.',
+          'Redirect users of that module to its new Ruby on Rails URL.',
+          'Repeat until every module was migrated, then shut the legacy application down.',
+        ],
+      },
+      {
+        heading: 'What improved along the way',
+        bullets: [
+          'Performance: significant improvements over the legacy application.',
+          'A normalized database with a new structure.',
+          'Indexes to speed up searches.',
+          'Caching on all listings.',
+        ],
+      },
+      {
+        heading: 'Result',
+        paragraphs: [
+          'I have no measurements I can stand behind, so I describe the result without numbers. Every module moved to Ruby on Rails, users were redirected to the new URLs along the way, and the legacy application was shut down.',
+        ],
+      },
+    ],
+    stack: ['Ruby on Rails', 'JavaScript', 'Bootstrap', 'MySQL'],
+  },
+  {
     slug: 'ai-appointment-agent',
     title: 'AI Appointment Agent',
     summary:
-      'A WhatsApp agent for a dental clinic that answers patient questions and books, moves, and cancels appointments, with a panel where the clinic team takes over what the agent cannot resolve.',
+      "A WhatsApp agent that answers a dental clinic's questions and books, moves, and cancels appointments, with a panel where staff take over what it cannot resolve.",
     role: 'Freelance Software Engineer',
     organization: 'Independent',
     start: '2026-10',
@@ -195,9 +305,9 @@ export const caseStudies: CaseStudy[] = [
   },
   {
     slug: 'starter-template-nestjs',
-    title: 'starter-template-nestjs',
+    title: 'NestJS Starter Template',
     summary:
-      'A production-oriented NestJS 12 starter with Better Auth, role-based access, PostgreSQL, and tests that run against real databases, so a new backend starts from a secure baseline.',
+      'A production-ready NestJS 12 starter with Better Auth, role-based access, PostgreSQL, and tests against real databases, for a secure baseline on new backends.',
     role: 'Author',
     organization: 'Open source (MIT license)',
     start: '2026-08',

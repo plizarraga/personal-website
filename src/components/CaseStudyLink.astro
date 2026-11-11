@@ -1,0 +1,14 @@
+---
+import { caseStudies } from '../data/case-studies';
+import { caseStudyPath } from '../lib/site';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const study = caseStudies.find((candidate) => candidate.slug === slug);
+if (!study) throw new Error(`No case study with the slug "${slug}"`);
+---
+
+<p><a href={caseStudyPath(slug)}>Read the {study.title} case study</a></p>

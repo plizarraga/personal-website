@@ -27,7 +27,7 @@ function projectBlock(project: Project, heading: string): string[] {
     formatDateRange(project.start, project.end),
     '',
     ...bulletList(project.bullets),
-    ...(project.environment ? ['', `Environment: ${project.environment.join(', ')}`] : []),
+    ...(project.environment ? ['', `Stack: ${project.environment.join(', ')}`] : []),
     ...(project.caseStudySlug
       ? ['', `Case study: ${absoluteUrl(caseStudyMarkdownPath(project.caseStudySlug))}`]
       : []),
@@ -62,7 +62,10 @@ export function experienceMarkdown(): string {
       '',
       ...(role.bullets.length > 0 ? [...bulletList(role.bullets), ''] : []),
       ...role.projects.flatMap((project) => projectBlock(project, '####')),
-      ...(role.environment ? [`Environment: ${role.environment.join(', ')}`, ''] : []),
+      ...(role.environment ? [`Stack: ${role.environment.join(', ')}`, ''] : []),
+      ...(role.caseStudySlug
+        ? [`Case study: ${absoluteUrl(caseStudyMarkdownPath(role.caseStudySlug))}`, '']
+        : []),
     ]),
     '## Selected projects',
     '',
@@ -99,6 +102,7 @@ export function caseStudyMarkdown(study: CaseStudy): string {
     study.summary,
     '',
     ...(study.repository ? [`Source code: ${study.repository.url}`, ''] : []),
+    ...(study.productSite ? [`Product site: ${study.productSite.url}`, ''] : []),
     ...study.sections.flatMap((section) => [
       `## ${section.heading}`,
       '',

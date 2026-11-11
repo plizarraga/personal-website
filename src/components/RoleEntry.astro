@@ -1,5 +1,6 @@
 ---
 import type { Role } from '../data/cv';
+import CaseStudyLink from './CaseStudyLink.astro';
 import DateRange from './DateRange.astro';
 import ProjectEntry from './ProjectEntry.astro';
 
@@ -10,7 +11,7 @@ interface Props {
 const { role } = Astro.props;
 ---
 
-<article>
+<article class="entry">
   <h3>{role.title} · {role.company}</h3>
   <p class="meta"><DateRange start={role.start} end={role.end} /> · {role.location}</p>
   {
@@ -23,5 +24,12 @@ const { role } = Astro.props;
     )
   }
   {role.projects.map((project) => <ProjectEntry project={project} level={4} />)}
-  {role.environment && <p class="env">Environment: {role.environment.join(', ')}</p>}
+  {
+    role.environment && (
+      <p class="env">
+        <span class="stack-label">Stack:</span> {role.environment.join(', ')}
+      </p>
+    )
+  }
+  {role.caseStudySlug && <CaseStudyLink slug={role.caseStudySlug} />}
 </article>

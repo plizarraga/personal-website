@@ -1,6 +1,6 @@
 ---
 import type { Project } from '../data/cv';
-import { caseStudyPath } from '../lib/site';
+import CaseStudyLink from './CaseStudyLink.astro';
 import DateRange from './DateRange.astro';
 
 interface Props {
@@ -13,21 +13,21 @@ const { project, level } = Astro.props;
 const Heading = `h${level}` as const;
 ---
 
-<section>
+<section class:list={[{ entry: level === 3 }]}>
   <Heading>
     {project.url ? <a href={project.url}>{project.name}</a> : project.name}
-    {project.status && <span class="meta"> ({project.status})</span>}
+    {project.status && <span class="meta status"> ({project.status})</span>}
   </Heading>
   <p class="meta"><DateRange start={project.start} end={project.end} /></p>
   <ul>
     {project.bullets.map((bullet) => <li>{bullet}</li>)}
   </ul>
-  {project.environment && <p class="env">Environment: {project.environment.join(', ')}</p>}
   {
-    project.caseStudySlug && (
-      <p>
-        <a href={caseStudyPath(project.caseStudySlug)}>Read the case study</a>
+    project.environment && (
+      <p class="env">
+        <span class="stack-label">Stack:</span> {project.environment.join(', ')}
       </p>
     )
   }
+  {project.caseStudySlug && <CaseStudyLink slug={project.caseStudySlug} />}
 </section>
