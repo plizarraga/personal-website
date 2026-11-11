@@ -60,7 +60,8 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | --- | --- |
 | `pnpm dev` | Dev server with hot reload |
 | `pnpm check` | Type-checks `.astro` and `.ts` files |
-| `pnpm build` | Runs `astro check`, then builds the site into `dist/` |
+| `pnpm build` | Runs `astro check`, builds the site into `dist/`, then runs `check:dist` |
+| `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, canonicals, JSON-LD, sitemap, Markdown copies, internal links |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
 | `pnpm run deploy` | Builds and deploys to production (see [Deployment](#deployment)) |
 | `pnpm og-image` | Regenerates `public/og.png` after a change to the name, Headline, Differentiators, or Domains |
@@ -121,11 +122,11 @@ The site has no environment variables. These files hold the settings you may cha
 | [`public/_headers`](public/_headers) | Security headers, and the canonical `Link` header of each Markdown copy |
 
 > [!IMPORTANT]
-> `site` in `astro.config.mjs` and `SITE_URL` in `src/lib/site.ts` must match. A new page with a Markdown copy also needs its own rule in `public/_headers`, so the copy points to the HTML page as canonical.
+> `site` in `astro.config.mjs` and `SITE_URL` in `src/lib/site.ts` must match. A new page with a Markdown copy also needs its own rule in `public/_headers`, so the copy points to the HTML page as canonical. `check:dist` fails the build when either is wrong.
 
 ## Deployment
 
-Deploys are manual; there is no CI. `pnpm run deploy` needs a Wrangler session (`wrangler login`) with access to the owner's Cloudflare account. Use `pnpm run deploy`, not `pnpm deploy`: `pnpm deploy` is a different, built-in pnpm command.
+Deploys are manual: CI (`.github/workflows/ci.yml`) runs `pnpm build` on every pull request but does not deploy. `pnpm run deploy` runs `check:dist` before it ships, and needs a Wrangler session (`wrangler login`) with access to the owner's Cloudflare account. Use `pnpm run deploy`, not `pnpm deploy`: `pnpm deploy` is a different, built-in pnpm command.
 
 Everything outside the code lives in Cloudflare and the search consoles:
 
@@ -148,4 +149,4 @@ This is a personal site maintained by its owner. Changes go through a pull reque
 
 - Branch names follow `type/description`, such as `feat/new-case-study`.
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org).
-- Run `pnpm build` before opening a PR; it runs `astro check` first.
+- Run `pnpm build` before opening a PR; it runs `astro check` first and `check:dist` last. CI runs the same command.
