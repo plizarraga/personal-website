@@ -14,7 +14,8 @@
     "check:dist": "node scripts/check-dist.mjs",
     "check:a11y": "node scripts/check-a11y.mjs",
     "preview": "astro build && wrangler dev",
-    "deploy": "astro build && node scripts/check-dist.mjs && node scripts/check-a11y.mjs && wrangler deploy",
+    "deploy": "astro build && node scripts/check-dist.mjs && node scripts/check-a11y.mjs && wrangler deploy && node scripts/indexnow.mjs",
+    "indexnow": "node scripts/indexnow.mjs",
     "og-image": "node scripts/og-image.mjs",
     "icons": "node scripts/icons.mjs"
   },
