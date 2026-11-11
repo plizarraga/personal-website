@@ -72,7 +72,7 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | `pnpm check:posts` | Checks the Markdown source of every post against [Post format](#post-format) |
 | `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, the Headline verbatim in the home `<title>` and every `og:image:alt`, canonicals, JSON-LD (dates with time and offset), sitemap, Markdown copies, internal links, `<link>` files, `favicon.ico` and `apple-touch-icon.png` |
 | `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast, and on links that touch on the same line |
-| `pnpm screenshot <route> [--phone] [--dark] [--full] [--selector <css>] [--out <file>]` | Builds, then saves a PNG of one page as a visitor sees it, in `.screenshots/` by default. Use it to check a visual change |
+| `pnpm screenshot <route> [--phone] [--dark] [--full] [--selector <css>] [--out <file>]` | Builds, then saves a PNG of one page as a visitor sees it, in `.screenshots/` by default. Use it to check a visual change. To shoot a server that is already running, such as `pnpm dev` for a prototype, run `node scripts/screenshot.mjs "<route>?<query>" --origin http://localhost:4321` |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
 | `pnpm run deploy` | Builds and deploys to production, then submits the sitemap URLs to IndexNow (see [Deployment](#deployment)) |
 | `pnpm indexnow` | Submits the URLs in `dist/sitemap-0.xml` to IndexNow without deploying |
@@ -142,7 +142,7 @@ Every post looks and reads the same. To change a rule, change this list and the 
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicons, og.png, CV PDF
-├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-posts.mjs (checks post sources before each build), check-dist.mjs and check-a11y.mjs (check dist/ after each build), screenshot.mjs and lib/serve-dist.mjs (serve dist/ in Chromium), indexnow.mjs (after each deploy)
+├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-deploy-branch.mjs (deploys only from main), check-posts.mjs (checks post sources before each build), check-dist.mjs and check-a11y.mjs (check dist/ after each build), screenshot.mjs and lib/serve-dist.mjs (serve dist/ in Chromium), indexnow.mjs (after each deploy)
 ├── src/
 │   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
 │   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter
@@ -180,7 +180,7 @@ The site has no environment variables. These files hold the settings you may cha
 
 ## Deployment
 
-Deploys are manual: CI (`.github/workflows/ci.yml`) runs `pnpm build` on every pull request but does not deploy. `pnpm run deploy` runs `check:dist` and `check:a11y` before it ships, and needs a Wrangler session (`wrangler login`) with access to the owner's Cloudflare account. Use `pnpm run deploy`, not `pnpm deploy`: `pnpm deploy` is a different, built-in pnpm command.
+Deploys are manual: CI (`.github/workflows/ci.yml`) runs `pnpm build` on every pull request but does not deploy. `pnpm run deploy` runs `check:dist` and `check:a11y` before it ships, and needs a Wrangler session (`wrangler login`) with access to the owner's Cloudflare account. It deploys only from `main`, clean and up to date with `origin/main` (`scripts/check-deploy-branch.mjs`), so production is always what is merged: merge the PR, then `git checkout main && git pull`. Use `pnpm run deploy`, not `pnpm deploy`: `pnpm deploy` is a different, built-in pnpm command.
 
 Everything outside the code lives in Cloudflare and the search consoles:
 
