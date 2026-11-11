@@ -11,6 +11,7 @@
     "dev": "astro dev",
     "check": "astro check",
     "build": "astro check && node scripts/check-posts.mjs && astro build && node scripts/check-dist.mjs && node scripts/check-a11y.mjs",
+    "screenshot": "astro build && node scripts/screenshot.mjs",
     "check:posts": "node scripts/check-posts.mjs",
     "check:dist": "node scripts/check-dist.mjs",
     "check:a11y": "node scripts/check-a11y.mjs",

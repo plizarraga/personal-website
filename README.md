@@ -71,7 +71,8 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | `pnpm build` | Runs `astro check` and `check:posts`, builds the site into `dist/`, then runs `check:dist` and `check:a11y` |
 | `pnpm check:posts` | Checks the Markdown source of every post against [Post format](#post-format) |
 | `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, the Headline verbatim in the home `<title>` and every `og:image:alt`, canonicals, JSON-LD (dates with time and offset), sitemap, Markdown copies, internal links, `<link>` files, `favicon.ico` and `apple-touch-icon.png` |
-| `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast |
+| `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast, and on links that touch on the same line |
+| `pnpm screenshot <route> [--phone] [--dark] [--full] [--selector <css>] [--out <file>]` | Builds, then saves a PNG of one page as a visitor sees it, in `.screenshots/` by default. Use it to check a visual change |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
 | `pnpm run deploy` | Builds and deploys to production, then submits the sitemap URLs to IndexNow (see [Deployment](#deployment)) |
 | `pnpm indexnow` | Submits the URLs in `dist/sitemap-0.xml` to IndexNow without deploying |
@@ -141,7 +142,7 @@ Every post looks and reads the same. To change a rule, change this list and the 
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicons, og.png, CV PDF
-├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-posts.mjs (checks post sources before each build), check-dist.mjs and check-a11y.mjs (check dist/ after each build), indexnow.mjs (after each deploy)
+├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-posts.mjs (checks post sources before each build), check-dist.mjs and check-a11y.mjs (check dist/ after each build), screenshot.mjs and lib/serve-dist.mjs (serve dist/ in Chromium), indexnow.mjs (after each deploy)
 ├── src/
 │   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
 │   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter

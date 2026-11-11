@@ -7,3 +7,6 @@ dist/
 .dev.vars
 .DS_Store
 .playwright-cli/
+
+# pnpm screenshot output
+.screenshots/
