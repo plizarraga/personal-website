@@ -7,6 +7,9 @@ import { profile } from '@/data/cv';
 import { getCaseStudies } from '@/lib/case-study/collection';
 import { caseStudyMarkdownPath, caseStudyPath } from '@/lib/case-study/paths';
 import { caseStudySchema } from '@/lib/case-study/structured-data';
+import { formatDay } from '@/lib/dates';
+import { getPostsAbout } from '@/lib/post/collection';
+import { postPath } from '@/lib/post/paths';
 
 export const getStaticPaths = (async () =>
   (await getCaseStudies()).map((study) => ({ params: { slug: study.id }, props: { study } }))) satisfies GetStaticPaths;
@@ -14,6 +17,7 @@ export const getStaticPaths = (async () =>
 const { study } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
 const { data } = study;
 const { Content } = await render(study);
+const posts = await getPostsAbout(study.id);
 const path = caseStudyPath(study.id);
 /** The name is dropped from long titles so search results do not truncate them (about 60 characters). */
 const fullTitle = `${data.title}: case study · ${profile.name}`;
@@ -37,6 +41,22 @@ const title = fullTitle.length <= 60 ? fullTitle : `${data.title}: case study`;
     <p class="lede">{data.summary}</p>
 
     <Content />
+
+    {
+      posts.length > 0 && (
+        <>
+          <h2 id="posts">Posts about this project</h2>
+          <ul>
+            {posts.map((post) => (
+              <li>
+                <a href={postPath(post.id)}>{post.data.title}</a>{' '}
+                <span class="meta">· {formatDay(post.data.published)}</span>
+              </li>
+            ))}
+          </ul>
+        </>
+      )
+    }
 
     <h2 id="stack">Stack</h2>
     <p class="env">{data.stack.join(', ')}</p>

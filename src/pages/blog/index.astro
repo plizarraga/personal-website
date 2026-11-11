@@ -1,0 +1,52 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { profile } from '@/data/cv';
+import { formatDay } from '@/lib/dates';
+import { getPosts } from '@/lib/post/collection';
+import { BLOG_PATH, postPath } from '@/lib/post/paths';
+import { blogSchema } from '@/lib/post/structured-data';
+
+const posts = await getPosts();
+const title = `Blog · ${profile.name}`;
+---
+
+<BaseLayout
+  {title}
+  description={`Technical writing by ${profile.name}, Senior Software Engineer: how I design, test, and ship software, starting with a WhatsApp AI agent.`}
+  path={BLOG_PATH}
+  jsonLd={blogSchema(posts, title)}
+>
+  <h1>Blog</h1>
+  <p class="lede">
+    I'm {profile.name}, a Senior Software Engineer. Here I write about the decisions behind what I build: what I chose,
+    what it cost, and what I got wrong.
+  </p>
+
+  <ul class="entries">
+    {
+      posts.map((post) => (
+        <li class="entry">
+          <h2>
+            <a href={postPath(post.id)}>{post.data.title}</a>
+          </h2>
+          <p class="meta">
+            <time datetime={post.data.published}>{formatDay(post.data.published)}</time>
+          </p>
+          <p>{post.data.summary}</p>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>
+
+<style>
+  .entry > h2 {
+    margin: 0 0 0.15rem;
+    font-size: 1.1rem;
+  }
+
+  .entry > h2 a {
+    display: inline-block;
+    padding-block: 0.2rem;
+  }
+</style>

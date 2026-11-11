@@ -12,5 +12,8 @@ export default defineConfig({
   markdown: {
     // Keep straight quotes and hyphens exactly as written in the case studies.
     processor: satteri({ features: { smartPunctuation: false } }),
+    // Code blocks use the site's own colors (see `.post pre` in global.css). Shiki's themes add inline colors that
+    // fail the contrast check and a dark block that ignores the light theme.
+    syntaxHighlight: false,
   },
 });

@@ -28,6 +28,10 @@
   Content-Type: text/markdown; charset=utf-8
   Link: <https://pedrolizarraga.com/work/starter-template-nestjs>; rel="canonical"
 
+/blog/state-machine-to-guarded-agent.md
+  Content-Type: text/markdown; charset=utf-8
+  Link: <https://pedrolizarraga.com/blog/state-machine-to-guarded-agent>; rel="canonical"
+
 /llms.txt
   Content-Type: text/plain; charset=utf-8
 

@@ -1,0 +1,40 @@
+---
+import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
+import { render } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import CaseStudyLink from '@/components/case-study/CaseStudyLink.astro';
+import { profile } from '@/data/cv';
+import { formatDay } from '@/lib/dates';
+import { getPosts } from '@/lib/post/collection';
+import { BLOG_PATH, postMarkdownPath, postPath } from '@/lib/post/paths';
+import { postSchema } from '@/lib/post/structured-data';
+
+export const getStaticPaths = (async () =>
+  (await getPosts()).map((post) => ({ params: { slug: post.id }, props: { post } }))) satisfies GetStaticPaths;
+
+const { post } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
+const { data } = post;
+const { Content } = await render(post);
+/** The name is dropped from long titles so search results do not truncate them (about 60 characters). */
+const fullTitle = `${data.title} · ${profile.name}`;
+const title = fullTitle.length <= 60 ? fullTitle : data.title;
+---
+
+<BaseLayout {title} description={data.summary} path={postPath(post.id)} jsonLd={postSchema(post)} markdownPath={postMarkdownPath(post.id)}>
+  <article class="post">
+    <h1>{data.title}</h1>
+    <p class="meta">
+      <a href="/">{profile.name}</a> · <time datetime={data.published}>{formatDay(data.published)}</time>
+      {data.updated && <> · Updated <time datetime={data.updated}>{formatDay(data.updated)}</time></>}
+    </p>
+    <p class="lede">{data.summary}</p>
+
+    <Content />
+
+    {data.caseStudy && <CaseStudyLink slug={data.caseStudy} />}
+
+    <p class="more-links">
+      <a href={BLOG_PATH}>All posts</a> · <a href={postMarkdownPath(post.id)}>Markdown</a>
+    </p>
+  </article>
+</BaseLayout>

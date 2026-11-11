@@ -295,3 +295,39 @@ main {
 .nowrap {
   white-space: nowrap;
 }
+
+/* Post bodies: code and tables. Code wraps instead of scrolling, so no block needs keyboard scrolling on a phone. */
+.post code {
+  font-family: var(--mono);
+  font-size: 0.875em;
+}
+
+.post pre {
+  margin: 0 0 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
+.post pre code {
+  font-size: 0.8rem;
+}
+
+.post table {
+  width: 100%;
+  margin: 0 0 1rem;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.post th,
+.post td {
+  padding: 0.35rem 0.5rem 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+}
