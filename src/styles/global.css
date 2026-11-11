@@ -203,6 +203,16 @@ main {
   font-size: 1.05rem;
 }
 
+.footer-nav {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.footer-nav ul {
+  margin: 0;
+}
+
 /* Shared pieces */
 
 .headline {

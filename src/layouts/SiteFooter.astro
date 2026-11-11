@@ -2,10 +2,34 @@
 import { profile } from '@/data/cv';
 import { formatDay } from '@/lib/dates';
 import { lastUpdated } from '@/lib/last-updated';
+import { mainNav } from '@/data/navigation';
+import { CV_PDF_PATH } from '@/lib/site';
+
+interface Props {
+  /** Path of the current page, to mark its navigation link. */
+  currentPath?: string;
+}
+
+const { currentPath } = Astro.props;
+// The site's sections again at the end of every page: on small screens the header is only "← Home".
 ---
 
 <footer class="site-footer" id="contact">
   <div class="container">
+    <nav class="footer-nav" aria-label="Footer">
+      <ul class="inline-list">
+        {
+          mainNav.map((link) => (
+            <li>
+              <a href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>
+                {link.label}
+              </a>
+            </li>
+          ))
+        }
+        <li><a href={CV_PDF_PATH} download>CV (PDF)</a></li>
+      </ul>
+    </nav>
     <h2>Contact</h2>
     <ul class="inline-list">
       <li><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
