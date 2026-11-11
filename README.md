@@ -29,7 +29,7 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 ### Prerequisites
 
 - Node.js 22.23.4 or later (the `engines` field in [`package.json`](package.json))
-- pnpm 10.26 or later ([`pnpm-workspace.yaml`](pnpm-workspace.yaml) uses `allowBuilds`)
+- pnpm 11.25.0, the version pinned in `packageManager` in [`package.json`](package.json); CI installs the same one
 
 ### Installation
 

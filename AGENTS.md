@@ -1,0 +1,20 @@
+# AGENTS.md
+
+Read [`README.md`](README.md) before changing the site: its "Content rules" section says where every fact comes from, and [`GLOSSARY.md`](GLOSSARY.md) defines the terms used in code and content.
+
+## Dependabot
+
+[`.github/dependabot.yml`](.github/dependabot.yml) opens PRs every Monday: one group for production minor and patch updates, one for development minor and patch updates, one PR per major update, and one per GitHub Action. CI (`pnpm build`) is the merge gate.
+
+- **Merge order:** small single-dependency PRs first, the grouped PRs last, one at a time. After each merge the next PR may need a rebase; comment `@dependabot rebase` on it.
+- **Lockfile conflicts:** when Dependabot cannot rebase, regenerate the lockfile on the PR branch:
+
+  ```bash
+  git fetch origin && git merge origin/main        # pnpm-lock.yaml will conflict
+  git checkout origin/main -- pnpm-lock.yaml
+  pnpm install --no-frozen-lockfile
+  pnpm install --frozen-lockfile && pnpm build
+  git add pnpm-lock.yaml && git commit -m "chore(deps): merge main and regenerate lockfile" && git push
+  ```
+
+- **Re-run, do not investigate:** `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` (a transitive package is younger than pnpm's 1-day `minimumReleaseAge`; re-run CI the next day) and network timeouts during install (`gh run rerun <id> --failed`).
