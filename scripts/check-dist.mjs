@@ -85,6 +85,13 @@ for (const page of pages) {
     }
   }
 
+  // The footer says "No cookies". The only script the site ships is inline JSON-LD; Cloudflare Web
+  // Analytics (cookieless) is injected at the edge, so it never appears in dist.
+  for (const [, attrs] of html.matchAll(/<script([^>]*)>/g)) {
+    if (!/type="application\/ld\+json"/.test(attrs) || /\bsrc=/.test(attrs)) fail(where, `unexpected <script>, breaks the "No cookies" footer: <script${attrs}>`);
+  }
+  if (/document\.cookie|localStorage|sessionStorage/.test(html)) fail(where, 'the HTML touches cookies or web storage, breaks the "No cookies" footer');
+
   // A source comment in a component leaks into the page of every route that uses it.
   if (html.includes('<!--')) fail(where, 'the HTML contains a comment');
 
