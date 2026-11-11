@@ -21,7 +21,7 @@ const title = `Experience · ${profile.name}, Senior Software Engineer`;
 
 <BaseLayout
   title={title}
-  description={`Full CV of ${profile.name}, Senior Software Engineer: experience at Publicis Sapient and Fender, skills, projects, certifications, and education.`}
+  description={`Full CV of ${profile.name}, Senior Software Engineer: roles at Publicis Sapient, Fender, and docDigitales, plus skills, projects, certifications, and education.`}
   path="/experience"
   jsonLd={webPageSchema('/experience', title)}
   markdownPath={EXPERIENCE_MARKDOWN_PATH}
@@ -53,12 +53,16 @@ const title = `Experience · ${profile.name}, Senior Software Engineer`;
 
   <section aria-labelledby="roles">
     <h2 id="roles">Professional experience</h2>
-    {roles.map((role) => <RoleEntry role={role} />)}
+    <div class="entries">
+      {roles.map((role) => <RoleEntry role={role} />)}
+    </div>
   </section>
 
   <section aria-labelledby="projects">
     <h2 id="projects">Selected projects</h2>
-    {selectedProjects.map((project) => <ProjectEntry project={project} level={3} />)}
+    <div class="entries">
+      {selectedProjects.map((project) => <ProjectEntry project={project} level={3} />)}
+    </div>
   </section>
 
   <section aria-labelledby="certifications">

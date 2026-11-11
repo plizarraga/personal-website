@@ -1,17 +1,20 @@
 ---
-import DateRange from '../components/DateRange.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import DateRange from '../components/DateRange.astro';
 import { caseStudies } from '../data/case-studies';
 import { profile, roles, summary } from '../data/cv';
 import { CV_PDF_PATH, caseStudyPath } from '../lib/site';
 import { profilePageSchema } from '../lib/structured-data';
 
 const recentRoles = roles.slice(0, 3);
+const agent = caseStudies.find((study) => study.slug === 'ai-appointment-agent');
+/** Short stack line: skips the long multi-provider entry and keeps the first seven items. */
+const stackLine = (stack: string[]) => stack.filter((item) => item.length < 24).slice(0, 7).join(', ');
 ---
 
 <BaseLayout
   title={`${profile.name} · Senior Software Engineer, Full-Stack`}
-  description={`${profile.shortBio} Recent work: healthcare platforms on Epic FHIR and AI agents.`}
+  description="Senior Full-Stack Software Engineer with 15+ years across healthcare (Epic FHIR), B2B commerce, electronic invoicing, and AI agents. TypeScript, Node.js."
   path="/"
   ogType="profile"
   jsonLd={profilePageSchema()}
@@ -19,10 +22,9 @@ const recentRoles = roles.slice(0, 3);
   <section aria-labelledby="name">
     <h1 id="name">{profile.name}</h1>
     <p class="headline">{profile.headline}</p>
-    <p class="lede">{profile.differentiators}</p>
     <p class="meta">{profile.location} · {profile.workMode}</p>
-    <ul class="inline-list" aria-label="Contact and CV">
-      <li><a href={`mailto:${profile.email}`}>Email me</a></li>
+    <ul class="actions" aria-label="Contact and CV">
+      <li><a class="primary" href={`mailto:${profile.email}`}>Email me</a></li>
       <li><a href={CV_PDF_PATH} download>Download CV (PDF)</a></li>
       <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
       <li><a href={profile.github.url} rel="me">{profile.github.label}</a></li>
@@ -31,20 +33,32 @@ const recentRoles = roles.slice(0, 3);
 
   <section aria-labelledby="about">
     <h2 id="about">About</h2>
-    {summary.map((paragraph) => <p>{paragraph}</p>)}
+    <p class="lede">{summary[0]}</p>
+    {
+      agent && (
+        <p>
+          I also build AI agents for businesses as a freelancer, using the Vercel AI SDK. I am building a WhatsApp
+          appointment agent for a dental clinic, which is still in development.{' '}
+          <a href={caseStudyPath(agent.slug)}>Read the {agent.title} case study</a>.
+        </p>
+      )
+    }
   </section>
 
   <section aria-labelledby="selected-work">
     <h2 id="selected-work">Selected work</h2>
-    <ul class="plain-list">
+    <ul class="entries">
       {
         caseStudies.map((study) => (
-          <li>
-            <a href={caseStudyPath(study.slug)}>
-              <strong>{study.title}</strong>
-            </a>
-            <br />
-            {study.summary}
+          <li class="entry">
+            <h3>
+              <a href={caseStudyPath(study.slug)}>{study.title}</a>
+              {study.status && <span class="meta status"> · {study.status}</span>}
+            </h3>
+            <p>{study.summary}</p>
+            <p class="env">
+              <span class="stack-label">Stack:</span> {stackLine(study.stack)}
+            </p>
           </li>
         ))
       }
@@ -53,18 +67,81 @@ const recentRoles = roles.slice(0, 3);
 
   <section aria-labelledby="recent-experience">
     <h2 id="recent-experience">Recent experience</h2>
-    <ul class="plain-list">
+    <ol class="timeline">
       {
         recentRoles.map((role) => (
           <li>
-            <strong>{role.title}</strong>, {role.company}{' '}
-            <span class="meta nowrap">
-              · <DateRange start={role.start} end={role.end} />
-            </span>
+            <p class="meta">
+              <DateRange start={role.start} end={role.end} />
+            </p>
+            <p>
+              <strong>{role.title}</strong>, {role.company}
+            </p>
           </li>
         ))
       }
-    </ul>
+    </ol>
     <p><a href="/experience">Full experience, skills, and projects</a></p>
   </section>
 </BaseLayout>
+
+<style>
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .actions li + li {
+    margin-top: 0;
+  }
+
+  .actions a {
+    display: inline-block;
+    padding-block: 0.25rem;
+  }
+
+  .actions .primary {
+    padding: 0.5rem 0.95rem;
+    border-radius: 6px;
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .timeline {
+    margin: 0 0 1rem;
+    padding: 0 0 0 1.25rem;
+    list-style: none;
+    border-left: 1px solid var(--border);
+  }
+
+  .timeline li {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .timeline li + li {
+    margin-top: 0;
+  }
+
+  .timeline li::before {
+    content: '';
+    position: absolute;
+    left: calc(-1.25rem - 4.5px);
+    top: 0.55rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .timeline p {
+    margin: 0;
+  }
+</style>

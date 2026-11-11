@@ -36,6 +36,8 @@ export interface Role {
   bullets: string[];
   projects: Project[];
   environment?: string[];
+  /** Slug of the case study that tells this role's project in full, if there is one. */
+  caseStudySlug?: string;
 }
 
 export interface SkillGroup {
@@ -67,23 +69,20 @@ export const profile = {
   /** One sentence for meta descriptions, Open Graph, and structured data. */
   shortBio:
     'Senior Full-Stack Software Engineer with 15+ years building web applications with TypeScript, Node.js, React, Angular, and GraphQL.',
-  /** The two Differentiators, phrased for the home page hero. */
-  differentiators:
-    'Most recently, I built GraphQL and Node.js services over Epic FHIR for a healthcare platform, and I am building AI agents with the Vercel AI SDK.',
   /** Third-person summary for machine readers, such as `/llms.txt`. */
   thirdPersonBio:
-    'Pedro Lizárraga is a Senior Software Engineer based in Mexicali, Baja California, Mexico, working remotely, with 15+ years of experience building web applications with TypeScript, Node.js, React, Angular, and GraphQL. Most recently he built GraphQL and Node.js services over Epic FHIR for a healthcare platform, and he is building AI agents with the Vercel AI SDK.',
+    'Pedro Lizárraga is a Senior Software Engineer based in Mexicali, Baja California, Mexico, working remotely, with 15+ years of experience building web applications with TypeScript, Node.js, React, Angular, and GraphQL. Most recently he built GraphQL and Node.js services over Epic FHIR for a healthcare platform, and he is building AI agents with the Vercel AI SDK. Earlier he built core experiences for the dealer-facing B2B commerce platform of Fender Musical Instruments Corporation and migrated an electronic-invoicing SaaS to Ruby on Rails.',
 } as const;
 
 export const summary: string[] = [
-  "I'm Pedro Lizárraga, a Senior Software Engineer with 15+ years of experience building scalable, reliable web applications across healthcare, e-commerce, finance, transportation, and government. I specialize in TypeScript, Node.js, NestJS, React, Angular, GraphQL, AWS, Azure, and Epic FHIR integrations, and I hold the Apollo Graph Developer – Associate certification.",
+  "I'm Pedro Lizárraga, a Senior Software Engineer with 15+ years of experience building scalable, reliable web applications across healthcare, e-commerce, finance, transportation, and government. I specialize in TypeScript, Node.js, NestJS, React, Angular, GraphQL, Cloudflare Workers, Durable Objects, Cloudflare D1, and Epic FHIR integrations, and I hold the Apollo Graph Developer – Associate certification.",
   'I also build AI agents with the Vercel AI SDK as a freelancer, and I conduct code reviews and mentor engineers in cross-functional Agile teams.',
 ];
 
 export const skills: SkillGroup[] = [
   {
     label: 'Languages & Frameworks',
-    items: ['TypeScript', 'JavaScript', 'Node.js', 'NestJS', 'Express.js', 'React', 'Next.js', 'Angular', 'Hono', 'Python', 'Ruby on Rails', 'C#', 'ASP.NET/.NET'],
+    items: ['TypeScript', 'JavaScript', 'Node.js', 'NestJS', 'Express.js', 'React', 'Next.js', 'Angular', 'Hono', 'Ruby on Rails', 'C#', 'ASP.NET/.NET'],
   },
   {
     label: 'APIs & Architecture',
@@ -192,12 +191,14 @@ export const roles: Role[] = [
     bullets: [
       "Built core experiences for Fender's dealer-facing B2B commerce platform, including product discovery, catalog, cart, ordering, and order-tracking workflows.",
       'Designed scalable Angular application structures and improved responsive behavior and navigation across key journeys.',
-      'Connected frontend capabilities through GraphQL integrations and serverless Node.js services running on AWS Lambda.',
+      'Connected frontend capabilities through serverless Node.js services running on AWS Lambda.',
       'Collaborated with product, backend, and QA functions in Agile teams to plan, implement, test, and release customer-facing capabilities.',
       'Conducted code reviews and mentored and onboarded engineers on the team.',
     ],
     projects: [],
-    environment: ['Angular', 'TypeScript', 'GraphQL', 'Node.js', 'Express.js', 'AWS Lambda', 'Amazon S3', 'Agile'],
+    environment: ['Angular', 'TypeScript', 'Node.js', 'Express.js', 'AWS Lambda', 'Amazon S3', 'Agile'],
+
+    caseStudySlug: 'dealer-b2b-commerce-platform',
   },
   {
     title: 'Senior Full-Stack Developer',
@@ -206,11 +207,13 @@ export const roles: Role[] = [
     start: '2014-08',
     end: '2016-10',
     bullets: [
-      'Built an electronic-invoicing web platform covering invoicing, cost control, payroll, customer, and supplier workflows.',
-      'Implemented full-stack functionality with Ruby on Rails, Python, JavaScript, Bootstrap, and MySQL, balancing usability with dependable business processing.',
+      'Migrated a legacy WebDev electronic-invoicing platform to a Ruby on Rails SaaS, module by module, covering invoicing, cost control, payroll, customer, and supplier workflows, with parallel redirects until the legacy application was shut down.',
+      'Implemented full-stack functionality with Ruby on Rails, JavaScript, Bootstrap, and MySQL, balancing usability with dependable business processing.',
     ],
     projects: [],
-    environment: ['Ruby on Rails', 'Python', 'JavaScript', 'Bootstrap', 'MySQL'],
+    environment: ['Ruby on Rails', 'JavaScript', 'Bootstrap', 'MySQL'],
+
+    caseStudySlug: 'electronic-invoicing-saas-migration',
   },
   {
     title: 'Full-Stack Developer',
@@ -305,10 +308,13 @@ export const knowsAbout = [
   'Apollo Server',
   'Apollo Federation',
   'PostgreSQL',
-  'AWS Lambda',
-  'Microsoft Azure',
   'Cloudflare Workers',
+  'Durable Objects',
+  'Cloudflare D1',
   'FHIR',
+  'B2B commerce',
+  'Electronic invoicing',
+  'Ruby on Rails',
   'AI agents',
   'Vercel AI SDK',
   'RAG',

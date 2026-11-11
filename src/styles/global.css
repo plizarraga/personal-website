@@ -4,8 +4,9 @@
   --fg: #1d1d1b;
   --muted: #5c5c57;
   --border: #e3e3de;
-  --accent: #0a58a6;
+  --accent: #0b6b3a;
   --measure: 68ch;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 
   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 112.5%;
@@ -20,7 +21,7 @@
     --fg: #ebebe6;
     --muted: #a2a29b;
     --border: #2f2f2c;
-    --accent: #7cb5ff;
+    --accent: #6fd39a;
   }
 }
 
@@ -175,14 +176,52 @@ main {
   font-size: 1.1rem;
 }
 
+/* Secondary text (locations, dates, stack lines) is monospace, so it reads apart from the prose. */
 .meta,
 .env {
   color: var(--muted);
-  font-size: 0.95rem;
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
 }
 
 .meta {
   margin-bottom: 0.5rem;
+}
+
+/* Entries (case studies, roles, selected projects): a hairline above each and the same title spacing. */
+.entries {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.entry {
+  padding-block: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.entries > .entry + .entry {
+  margin-top: 0;
+}
+
+.entry > h3 {
+  margin: 0 0 0.15rem;
+}
+
+.entry > p {
+  margin: 0 0 0.4rem;
+}
+
+/* A status marker inside a heading, such as "in development": regular weight, not the heading's. */
+.status {
+  font-weight: 400;
+}
+
+.stack-label {
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--accent);
 }
 
 .inline-list {

@@ -2,6 +2,8 @@
 
 Acordada el 2026-11-10 en una sesión de grilling (tres rondas, todas las recomendaciones aceptadas). Los términos en inglés en **negritas** están definidos en [`GLOSSARY.md`](../GLOSSARY.md).
 
+Actualizada el 2026-11-10 para reflejar lo construido: cinco casos de estudio, el home en el orden de la variante A2C, el tema verde con texto secundario en monoespaciada y los cuatro **Domains** en los metadatos.
+
 ## 1. Objetivo
 
 Que un reclutador entienda en 10 segundos quién es Pedro Lizárraga, qué ha construido y cómo contactarlo, y que Google y los LLMs lo identifiquen como una sola persona con un perfil claro.
@@ -9,13 +11,14 @@ Que un reclutador entienda en 10 segundos quién es Pedro Lizárraga, qué ha co
 | Audiencia | Rol en el sitio |
 | --- | --- |
 | **Primary audience**: reclutadores y hiring managers de puestos Senior Full-Stack remotos | Todo el home se escribe para ellos |
-| **Freelance client**: negocios que quieren un agente de IA | Un bloque al final del home que enlaza al caso de estudio del agente |
+| **Freelance client**: negocios que quieren un agente de IA | Un párrafo en el About del home que enlaza al caso de estudio del agente |
 
 ## 2. Identidad
 
 - **Canonical name:** "Pedro Lizárraga". Las variantes "Pedro Lizárraga Brambila" y "Pedro Lizarraga" van solo en `alternateName` del JSON-LD.
 - **Headline:** "Senior Software Engineer | Full-Stack", con la misma redacción en el sitio, el CV, LinkedIn y GitHub.
-- **Differentiators**, en el subtítulo del hero: plataformas de salud con Epic FHIR y GraphQL, y agentes de IA.
+- **Differentiators:** plataformas de salud con Epic FHIR y GraphQL, y agentes de IA. Califican el Headline y aparecen en el About del home, en la imagen de Open Graph y en `llms.txt`.
+- **Domains:** healthcare, B2B commerce, electronic invoicing y AI agents, cada uno respaldado por un caso de estudio. Los cuatro van en la meta descripción del home, en `llms.txt`, en `knowsAbout` y en la imagen de Open Graph. Finanzas no es un Domain: el master solo la nombra en el resumen, y el sitio dice "electronic invoicing".
 - **Datos públicos:** email, LinkedIn, GitHub y "Mexicali, Baja California, Mexico · Remote". El teléfono no aparece ni en el sitio ni en el PDF.
 - **Coherencia entre perfiles.** Hoy hay dos inconsistencias que corregir:
   - La bio de GitHub dice "Frontend Developer | Angular". Hay que cambiarla al Headline.
@@ -29,15 +32,15 @@ Hay tres tipos de página y nada más: ni `/about` ni `/blog` al lanzar.
 
 Se lee de arriba abajo en este orden:
 
-1. **Navegación mínima:** el nombre enlaza al inicio, más Experience, Work y Contact.
+1. **Navegación mínima:** el nombre enlaza al inicio, más Experience y Contact.
 2. **Hero:**
-   - Foto pequeña, la misma de LinkedIn.
-   - `<h1>Pedro Lizárraga</h1>`, el Headline y el subtítulo con los Differentiators.
+   - `<h1>Pedro Lizárraga</h1>` y el Headline.
    - Una línea con "Mexicali, Baja California, Mexico · Remote".
-   - Acciones: *Email me*, *Download CV (PDF)*, LinkedIn y GitHub.
-3. **Selected work:** los 3 casos de estudio, cada uno con título, una línea de resumen y su stack. Son enlaces de texto, sin miniaturas.
-4. **Experience (resumen):** los 3 roles más recientes en una línea cada uno, y un enlace a `/experience`.
-5. **Bloque freelance:** algo como "I also build AI agents for businesses", con enlace al caso de estudio del agente.
+   - Acciones: *Email me* (la principal), *Download CV (PDF)*, LinkedIn y GitHub.
+   - La foto pequeña, la misma de LinkedIn, sigue pendiente (sección 10).
+3. **About:** el primer párrafo del resumen del master y un párrafo freelance, "I also build AI agents for businesses", con enlace al caso de estudio del agente.
+4. **Selected work:** los 5 casos de estudio, cada uno con título (`h3`), una línea de resumen y su stack. El agente lleva "in development". Son enlaces de texto, sin miniaturas.
+5. **Recent experience:** los 3 roles más recientes como línea de tiempo, y un enlace a `/experience`.
 6. **Footer:** email, perfiles y fecha de última actualización.
 
 ### `/experience`: CV completo en HTML
@@ -46,15 +49,15 @@ Es la versión que leen los crawlers y los LLMs: todo el texto del CV con encabe
 
 ### `/work/<slug>`: casos de estudio
 
-Al lanzar hay tres:
+Al lanzar hay cinco, en este orden:
 
-| Slug sugerido | Proyecto | Nota |
+| Slug | Proyecto | Nota |
 | --- | --- | --- |
 | `healthcare-platform` | Healthcare Platform (Publicis Sapient) | Sin nombre del cliente, igual que en el CV |
+| `dealer-b2b-commerce-platform` | Dealer B2B Commerce Platform (Fender) | Sin métricas, solo lo que dice el CV |
+| `electronic-invoicing-saas-migration` | Electronic Invoicing SaaS Migration to Rails (docDigitales) | Con enlace al sitio del producto; sin métricas |
 | `ai-appointment-agent` | Agente de citas con IA | Marcado "in development" |
-| `nestjs-starter-template` | starter-template-nestjs | Con enlace al código público |
-
-Fender queda para después del lanzamiento.
+| `starter-template-nestjs` | NestJS Starter Template (repo `starter-template-nestjs`) | Con enlace al código público |
 
 **Plantilla de cada caso:**
 - **Summary:** 2 o 3 frases autocontenidas que un LLM pueda citar tal cual.
@@ -85,7 +88,8 @@ Fender queda para después del lanzamiento.
 
 **Tipografía y color**
 - Fuente del sistema (`system-ui`) o una sola fuente variable autoalojada, sin pedir fuentes a terceros.
-- Fondo y texto neutros, con un solo color de acento para los enlaces y el nombre.
+- Texto secundario (ubicación, fechas y líneas de stack) en la monoespaciada del sistema (`ui-monospace`), para distinguirlo de la prosa.
+- Fondo y texto neutros, con un solo color de acento, verde, para los enlaces y el nombre.
 - Modo oscuro automático con `prefers-color-scheme`.
 
 **Lo que no lleva:** animaciones, carruseles, modales, barras de habilidad, muros de logos, grids de íconos de tecnologías, banner de cookies (no hay cookies) ni widget de chat.
@@ -114,7 +118,7 @@ Fender queda para después del lanzamiento.
   - **Home:** `ProfilePage` con `mainEntity` de tipo `Person`. Google dice que `ProfilePage` aplica a páginas centradas en una persona, y menciona como ejemplo válido la página "About Me" de un blog.
   - **Casos de estudio:** `Article` con `author` apuntando al mismo `Person` mediante su `@id`.
   - **`Person`:** `name`, `alternateName`, `jobTitle`, `url`, `image`, `email`, `sameAs` (LinkedIn y GitHub), `knowsAbout` (tecnologías del master), `address` (Mexicali, MX) y `alumniOf` (Instituto Tecnológico de Mexicali).
-- **Open Graph:** una sola imagen de 1200×630 para compartir (nombre más Headline), y `og:type` de tipo `profile` en el home.
+- **Open Graph:** una sola imagen de 1200×630 para compartir (nombre, Headline, stack y los cuatro Domains), y `og:type` de tipo `profile` en el home.
 - **Otros:**
   - Página 404 propia.
   - Enlaces internos entre el home, `/experience` y los casos de estudio.
@@ -179,7 +183,7 @@ Esqueleto del JSON-LD del home. Los valores definitivos salen del master:
 4. Agregar SEO y la capa para LLMs: metadatos, JSON-LD, sitemap, `robots.txt`, `llms.txt` y las copias `.md`.
 5. Publicar una vista previa en `workers.dev` sin compartirla.
 
-**Fase 2: casos de estudio**, uno a la vez y en este orden: Healthcare Platform, agente de IA y starter de NestJS.
+**Fase 2: casos de estudio**, uno a la vez y en este orden: Healthcare Platform, agente de IA, starter de NestJS, Fender (Dealer B2B Commerce Platform) y docDigitales (Electronic Invoicing).
 1. Hacer la entrevista corta.
 2. Confirmar los datos nuevos en el master.
 3. Escribir el caso y revisarlo.
@@ -194,7 +198,6 @@ Esqueleto del JSON-LD del home. Los valores definitivos salen del master:
 **Fase 4: perfiles.** Actualizar la bio y el campo de sitio web de GitHub, reescribir el README del perfil y agregar el sitio en LinkedIn.
 
 **Después del lanzamiento**
-- El caso de estudio de Fender.
 - La página en español para clientes freelance, cuando el agente esté en producción.
 - Reconsiderar el blog solo si puedes publicar con regularidad.
 
@@ -202,7 +205,7 @@ Esqueleto del JSON-LD del home. Los valores definitivos salen del master:
 
 - [x] Confirmar la URL de LinkedIn vigente: `https://www.linkedin.com/in/pedro-lizarraga-brambila`.
 - [ ] Una foto profesional, la misma de LinkedIn.
-- [ ] Las tres entrevistas de casos de estudio.
+- [x] Las entrevistas de los cinco casos de estudio (Healthcare Platform, agente de IA, starter de NestJS, Fender y docDigitales).
 - [ ] Opcional pero valioso: responder los "Open details" del master, sobre todo métricas que puedas defender.
 - [ ] Comprar el dominio.
 
@@ -215,4 +218,4 @@ Esqueleto del JSON-LD del home. Los valores definitivos salen del master:
 
 ## 12. Fuera de alcance al lanzar
 
-Blog, `/about`, versión en español, formulario de contacto, calendario de reuniones, GA4, animaciones, teléfono y el caso de estudio de Fender.
+Blog, `/about`, versión en español, formulario de contacto, calendario de reuniones, GA4, animaciones y teléfono.

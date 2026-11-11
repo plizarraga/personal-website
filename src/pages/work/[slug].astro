@@ -12,10 +12,13 @@ export const getStaticPaths = (() =>
 
 const { study } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
 const path = caseStudyPath(study.slug);
+/** The name is dropped from long titles so search results do not truncate them (about 60 characters). */
+const fullTitle = `${study.title}: case study · ${profile.name}`;
+const title = fullTitle.length <= 60 ? fullTitle : `${study.title}: case study`;
 ---
 
 <BaseLayout
-  title={`${study.title}: case study · ${profile.name}`}
+  {title}
   description={study.summary}
   {path}
   jsonLd={caseStudySchema(study)}
@@ -24,7 +27,7 @@ const path = caseStudyPath(study.slug);
   <article>
     <h1>{study.title}</h1>
     <p class="meta">
-      {study.role}, {study.organization} · <DateRange start={study.start} end={study.end} />
+      <a href="/">{profile.name}</a> · {study.role}, {study.organization} · <span class="nowrap"><DateRange start={study.start} end={study.end} /></span>
       {study.status && ` (${study.status})`}
       {study.note && ` · ${study.note}`}
     </p>
@@ -55,13 +58,21 @@ const path = caseStudyPath(study.slug);
 
     <section>
       <h2>Stack</h2>
-      <p>{study.stack.join(', ')}</p>
+      <p class="env">{study.stack.join(', ')}</p>
     </section>
 
     {
       study.repository && (
         <p>
           Source code: <a href={study.repository.url}>{study.repository.label}</a>
+        </p>
+      )
+    }
+
+    {
+      study.productSite && (
+        <p>
+          Product site: <a href={study.productSite.url}>{study.productSite.label}</a>
         </p>
       )
     }

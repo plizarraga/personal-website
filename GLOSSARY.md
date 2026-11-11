@@ -26,6 +26,10 @@ _Avoid_: tagline, bio, title
 One of the two things that set Pedro apart from other full-stack engineers: healthcare platforms built on Epic FHIR and GraphQL, and AI agents. They qualify the Headline; they never replace it.
 _Avoid_: specialty, niche, USP
 
+**Domain**:
+A kind of business or product where Pedro has built software, backed by a Case study: healthcare, B2B commerce, electronic invoicing, and AI agents. Healthcare and AI agents are the Differentiators.
+_Avoid_: sector, industry, vertical, niche, finance (say electronic invoicing)
+
 ## Content
 
 **CV Master**:
