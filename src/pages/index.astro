@@ -26,6 +26,7 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
     <p class="meta">{profile.location} · {profile.workMode}</p>
     <ul class="actions" aria-label="Contact and CV">
       <li><a class="primary" href={`mailto:${profile.email}`}>Email me</a></li>
+      <li class="main-nav"><nav aria-label="Main"><a href="/experience">Experience</a></nav></li>
       <li><a href={CV_PDF_PATH} download>Download CV (PDF)</a></li>
       <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
       <li><a href={profile.github.url} rel="me">{profile.github.label}</a></li>
@@ -82,7 +83,7 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
         ))
       }
     </ol>
-    <p><a href="/experience">Full experience, skills, and projects</a></p>
+    <p class="more-links"><a href="/experience">Full experience, skills, and projects</a></p>
   </section>
 </BaseLayout>
 
@@ -104,6 +105,17 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
   .actions a {
     display: inline-block;
     padding-block: 0.25rem;
+  }
+
+  /* Small screens only: the home page has no header there, so the Main navigation lives in the hero. */
+  .actions .main-nav {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .actions .main-nav {
+      display: list-item;
+    }
   }
 
   .actions .primary {

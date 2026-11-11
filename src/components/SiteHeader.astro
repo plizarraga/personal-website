@@ -7,19 +7,25 @@ interface Props {
 }
 
 const { currentPath } = Astro.props;
+// On small screens the header shrinks to a "← Home" link on inner pages and disappears on the home page, where the
+// name is already the page title. The home page then shows its own "Main" navigation (see index.astro).
+const isHome = currentPath === '/';
 const links = [{ href: '/experience', label: 'Experience' }];
 ---
 
-<header class="site-header">
+<header class="site-header" data-home={isHome ? '' : undefined}>
   <nav class="container" aria-label="Main">
-    <a class="home" href="/" aria-current={currentPath === '/' ? 'page' : undefined}>{profile.name}</a>
+    <a class="home" href="/" aria-current={isHome ? 'page' : undefined}>
+      <span class="brand">{profile.name}</span>
+      <span class="back"><span aria-hidden="true">←</span> Home</span>
+    </a>
     {
       links.map((link) => (
-        <a href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>
+        <a class="nav-link" href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>
           {link.label}
         </a>
       ))
     }
-    <a href="#contact">Contact</a>
+    <a class="nav-link" href="#contact">Contact</a>
   </nav>
 </header>
