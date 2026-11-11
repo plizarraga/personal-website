@@ -149,6 +149,45 @@ main {
   text-decoration: none;
 }
 
+.site-header .back {
+  display: none;
+}
+
+/* Small screens: the header is only a way back. The home page hides it, since the name is already its title. */
+@media (max-width: 640px) {
+  .site-header {
+    border-bottom: 0;
+  }
+
+  .site-header[data-home] {
+    display: none;
+  }
+
+  .site-header nav {
+    padding-block: 1rem 0;
+  }
+
+  .site-header .brand,
+  .site-header .nav-link {
+    display: none;
+  }
+
+  .site-header .back {
+    display: inline;
+  }
+
+  .site-header .home {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--accent);
+  }
+
+  main {
+    padding-top: 1.25rem;
+  }
+}
+
 /* Font sizes go on the children: a smaller font on `.container` would shrink its `ch`-based width. */
 .site-footer {
   border-top: 1px solid var(--border);
@@ -216,6 +255,13 @@ main {
 /* A status marker inside a heading, such as "in development": regular weight, not the heading's. */
 .status {
   font-weight: 400;
+}
+
+/* Standalone links (entry titles, "more" links) get a padded box so they reach the 24px minimum target size. */
+.entry > h3 a,
+.more-links a {
+  display: inline-block;
+  padding-block: 0.2rem;
 }
 
 .stack-label {
