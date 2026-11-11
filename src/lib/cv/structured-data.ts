@@ -1,6 +1,6 @@
 import { certifications, education, knowsAbout, profile } from '@/data/cv';
 import type { JsonLd } from '@/lib/json-ld';
-import { lastUpdated } from '@/lib/last-updated';
+import { lastModified } from '@/lib/last-updated';
 import { absoluteUrl } from '@/lib/site';
 
 /** The schema.org `Person` that every page is about. */
@@ -48,7 +48,7 @@ export function homePageSchema(): JsonLd {
       {
         '@type': 'ProfilePage',
         url: absoluteUrl('/'),
-        dateModified: lastUpdated,
+        dateModified: lastModified,
         mainEntity: personSchema(),
       },
       {
@@ -69,7 +69,7 @@ export function webPageSchema(path: string, name: string): JsonLd {
     '@type': 'WebPage',
     url: absoluteUrl(path),
     name,
-    dateModified: lastUpdated,
+    dateModified: lastModified,
     about: personSchema(),
   };
 }
