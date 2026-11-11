@@ -9,6 +9,9 @@ const dist = resolve(root, process.argv[2] ?? 'dist');
 const MAX_TITLE = 60;
 const MAX_DESCRIPTION = 160;
 const MAX_KEYWORD = 30;
+/** Google's structured data reports flag a date without a time and offset ("2026-11-11") as invalid. */
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2}(\.\d+)?)?(Z|[+-]\d{2}:\d{2})$/;
+const DATE_KEYS = ['datePublished', 'dateModified'];
 
 const failures = [];
 const fail = (where, message) => failures.push(`${where}: ${message}`);
@@ -42,6 +45,23 @@ const meta = (html, key) =>
   html.match(new RegExp(`<meta[^>]+(?:name|property)="${key}"[^>]+content="([^"]*)"`))?.[1] ??
   html.match(new RegExp(`<meta[^>]+content="([^"]*)"[^>]+(?:name|property)="${key}"`))?.[1];
 
+/** Every value under `key` anywhere in a JSON-LD tree, including inside `@graph`. */
+const valuesOf = (node, key) =>
+  Array.isArray(node)
+    ? node.flatMap((item) => valuesOf(item, key))
+    : node && typeof node === 'object'
+      ? Object.entries(node).flatMap(([k, v]) => (k === key ? [v] : valuesOf(v, key)))
+      : [];
+
+// The Headline is worded identically wherever Pedro's identity appears (GLOSSARY.md). Its source is
+// `profile.headline` in src/data/cv.ts, which the home page renders as `<p class="headline">`.
+const homeHtml = exists.has('/index.html') ? read(join(dist, 'index.html')) : '';
+const headline = decode(homeHtml.match(/<p class="headline"[^>]*>([^<]+)<\/p>/)?.[1] ?? '');
+if (!headline) fail('/index.html', 'no <p class="headline"> to read the Headline from');
+else if (!decode(homeHtml.match(/<title>([^<]*)<\/title>/)?.[1] ?? '').includes(headline)) {
+  fail('/index.html', `<title> does not contain the Headline verbatim: "${headline}"`);
+}
+
 for (const page of pages) {
   const html = read(join(dist, page));
   const where = page;
@@ -72,12 +92,18 @@ for (const page of pages) {
   if (!ogImage) fail(where, 'missing og:image');
   else if (!ogImage.startsWith(site)) fail(where, `og:image is not on ${site}: ${ogImage}`);
   else if (!exists.has(new URL(ogImage).pathname)) fail(where, `og:image file is missing from dist: ${ogImage}`);
+  if (headline && !decode(meta(html, 'og:image:alt') ?? '').includes(headline)) fail(where, `og:image:alt does not contain the Headline verbatim: "${headline}"`);
 
   for (const [, raw] of html.matchAll(/<script[^>]+type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/g)) {
     try {
       const data = JSON.parse(raw);
       for (const keyword of data.keywords ?? []) {
         if (keyword.length > MAX_KEYWORD || keyword.includes(',')) fail(where, `JSON-LD keyword is a sentence, not a keyword: "${keyword}"`);
+      }
+      for (const key of DATE_KEYS) {
+        for (const value of valuesOf(data, key)) {
+          if (typeof value !== 'string' || !ISO_DATETIME.test(value)) fail(where, `JSON-LD ${key} needs a date, time, and offset: ${JSON.stringify(value)}`);
+        }
       }
     } catch (error) {
       fail(where, `JSON-LD does not parse: ${error.message}`);
