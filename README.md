@@ -68,7 +68,8 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | --- | --- |
 | `pnpm dev` | Dev server with hot reload |
 | `pnpm check` | Type-checks `.astro` and `.ts` files |
-| `pnpm build` | Runs `astro check`, builds the site into `dist/`, then runs `check:dist` and `check:a11y` |
+| `pnpm build` | Runs `astro check` and `check:posts`, builds the site into `dist/`, then runs `check:dist` and `check:a11y` |
+| `pnpm check:posts` | Checks the Markdown source of every post against [Post format](#post-format) |
 | `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, the Headline verbatim in the home `<title>` and every `og:image:alt`, canonicals, JSON-LD (dates with time and offset), sitemap, Markdown copies, internal links, `<link>` files, `favicon.ico` and `apple-touch-icon.png` |
 | `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
@@ -114,12 +115,33 @@ The repo is public, so anything on `main` can be read on GitHub, whether or not 
 3. **Scheduled post**: merge the PR. While `published` is after today, `pnpm run deploy` leaves the post out of every page, the sitemap, `llms.txt`, and the JSON-LD (`HIDE_SCHEDULED=true`, read in [`src/lib/post/collection.ts`](src/lib/post/collection.ts)). `pnpm dev` and `pnpm build` show it.
 4. **Published**: the post appears on the first deploy on or after its Publication date. Deploys are manual for now (see [Deployment](#deployment)), so run `pnpm run deploy` that day.
 
+### Post format
+
+Every post looks and reads the same. To change a rule, change this list and the file named next to it in the same PR, so the docs and the build never disagree. The build fails on every rule marked *checked*.
+
+| Rule | Where it lives |
+| --- | --- |
+| Frontmatter: `title`, `summary`, `published`, `tags`, and optionally `updated` and `caseStudy` | Schema in [`src/content.config.ts`](src/content.config.ts) (*checked*) |
+| `title` fits a search result: the page title is at most 60 characters, with " · Pedro Lizárraga" dropped when it does not fit | [`src/pages/blog/[slug].astro`](src/pages/blog/[slug].astro), `MAX_TITLE` in [`scripts/check-dist.mjs`](scripts/check-dist.mjs) (*checked*) |
+| `summary` is one or two sentences, at most 160 characters. It is the meta description, the lede under the title, and the text in the blog list | Schema (*checked*) |
+| The body starts with a short introduction, then `##` sections. No `#` heading: the title comes from the frontmatter | [`scripts/check-posts.mjs`](scripts/check-posts.mjs) (*checked*) |
+| A post with 3 or more `##` sections gets a table of contents, built from those headings, between the lede and the body | `MIN_TOC_SECTIONS` in [`src/lib/post/toc.ts`](src/lib/post/toc.ts); every link must reach its section (`check:dist`, *checked*) |
+| Every code block names its language (` ```ts `, ` ```bash `, ` ```text ` for output) | [`scripts/check-posts.mjs`](scripts/check-posts.mjs) (*checked*) |
+| Code lines are at most 80 characters, so a desktop page needs no sideways scroll. Wrap comments and long strings by hand | `MAX_CODE_LINE` in [`scripts/check-posts.mjs`](scripts/check-posts.mjs) (*checked*) |
+| Code colors come from Shiki themes chosen for contrast on the site background, light and dark | `markdown.shikiConfig` in [`astro.config.mjs`](astro.config.mjs); contrast by `check:a11y` (*checked*) |
+| Tables for comparisons and measurements, with units in the header (`p50 latency (ms)`) | Review |
+| The post ends with a link to its case study, when it has one, then "All posts" and the Markdown copy | [`src/pages/blog/[slug].astro`](src/pages/blog/[slug].astro) |
+
+### Blog list
+
+`/blog` lists every published post, newest first by `published`, each with its title, Publication date, and `summary`. Scheduled posts are left out of production (see [Publishing a post](#publishing-a-post)). The list is [`src/pages/blog/index.astro`](src/pages/blog/index.astro); its order and filter are `getPosts()` in [`src/lib/post/collection.ts`](src/lib/post/collection.ts), which every page, `llms.txt`, and the JSON-LD share.
+
 ## Repository structure
 
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicons, og.png, CV PDF
-├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-dist.mjs and check-a11y.mjs (check dist/ after each build), indexnow.mjs (after each deploy)
+├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-posts.mjs (checks post sources before each build), check-dist.mjs and check-a11y.mjs (check dist/ after each build), indexnow.mjs (after each deploy)
 ├── src/
 │   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
 │   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter
@@ -132,7 +154,7 @@ personal-website/
 │   ├── lib/
 │   │   ├── cv/            # Markdown copy and JSON-LD of the CV
 │   │   ├── case-study/    # Paths, Markdown copy, JSON-LD, stack names
-│   │   ├── post/          # Paths, Markdown copy, JSON-LD of the blog
+│   │   ├── post/          # Paths, Markdown copy, JSON-LD, and table of contents of the blog
 │   │   └── *.ts           # Generic: site URLs, dates, JSON-LD serializer, last updated date
 │   ├── styles/            # global.css
 │   └── content.config.ts  # Case study and post frontmatter schemas
@@ -185,4 +207,4 @@ This is a personal site maintained by its owner. Changes go through a pull reque
 
 - Branch names follow `type/description`, such as `feat/new-case-study`.
 - Commits follow [Conventional Commits](https://www.conventionalcommits.org).
-- Run `pnpm build` before opening a PR; it runs `astro check` first and `check:dist` and `check:a11y` last. CI runs the same command.
+- Run `pnpm build` before opening a PR; it runs `astro check` and `check:posts` first and `check:dist` and `check:a11y` last. CI runs the same command.
