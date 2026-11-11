@@ -2,10 +2,6 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
 
-# Keep the workers.dev preview out of search results; only the custom domain is indexed.
-https://:worker.:subdomain.workers.dev/*
-  X-Robots-Tag: noindex
-
 # Markdown copies for LLMs and agents. The Link header names the HTML page as the canonical
 # version, so search engines do not index the copy as a duplicate. Add a rule here for every new page.
 /experience.md

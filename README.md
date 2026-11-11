@@ -134,17 +134,13 @@ Everything outside the code lives in Cloudflare and the search consoles:
 | Site | Cloudflare Workers, Worker `personal-website` | `pedrolizarraga.com` is a custom domain. Because `wrangler.jsonc` has `routes`, Wrangler turns off the `workers.dev` URL on every deploy |
 | Domain | Cloudflare Registrar | Renews automatically every November |
 | `www` redirect | Cloudflare Redirect Rule "Redirect www to root" | 301 to `https://pedrolizarraga.com`, keeping the path and query string |
+| HTTPS | Cloudflare "Always Use HTTPS" | 301 from `http://` to `https://`, keeping the path and query string |
 | Email | Cloudflare Email Routing | `hello@pedrolizarraga.com` forwards to the owner's inbox. Receive only; the catch-all is off |
 | Analytics | Cloudflare Web Analytics | Beacon injected automatically, no cookies. No click events or UTM tracking. Injection stops if HTML responses send `Cache-Control: no-transform` |
 | Search | Google Search Console (domain property) and Bing Webmaster Tools | `sitemap-index.xml` submitted to both |
 
 > [!WARNING]
 > Keep these DNS records: the `google-site-verification` TXT record on the apex, the Bing `<id>.pedrolizarraga.com` CNAME to `verify.bing.com`, and the Email Routing MX, SPF, and DKIM records. Deleting a verification record un-verifies the site in that console. Each verification record has a comment in Cloudflare that says what it is for.
-
-Known gaps:
-
-- HTTP is not redirected to HTTPS: "Always Use HTTPS" is off, so `http://pedrolizarraga.com/` returns 200.
-- `public/_headers` still sets `noindex` on the `workers.dev` URL, which is now turned off. The rule does nothing until that URL is turned back on.
 
 ## Contributing
 
