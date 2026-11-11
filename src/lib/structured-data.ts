@@ -1,4 +1,5 @@
-import { certifications, education, knowsAbout, lastUpdated, profile } from '../data/cv';
+import { certifications, education, knowsAbout, profile } from '../data/cv';
+import { lastUpdated } from './last-updated';
 import type { CaseStudy } from '../data/case-studies';
 import { SITE_URL, absoluteUrl, caseStudyPath } from './site';
 import { techNames } from './stack';
