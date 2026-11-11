@@ -73,7 +73,7 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
 | `pnpm run deploy` | Builds and deploys to production (see [Deployment](#deployment)) |
-| `pnpm og-image` | Regenerates `public/og.png` after a change to the name, Headline, Differentiators, or Domains |
+| `pnpm og-image` | Regenerates `public/og.png` after a change to the name, Headline, or photo (`scripts/og-photo.jpg`) |
 | `pnpm icons` | Regenerates `public/favicon.ico` and `public/apple-touch-icon.png` from `public/favicon.svg` |
 
 `pnpm build` writes eight HTML pages plus the files for crawlers and LLMs:
@@ -107,7 +107,7 @@ Every change to the site's text follows these rules. Terms in bold are defined i
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicons, og.png, CV PDF
-├── scripts/               # og-image.mjs (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-dist.mjs and check-a11y.mjs (check dist/ after each build)
+├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-dist.mjs and check-a11y.mjs (check dist/ after each build)
 ├── src/
 │   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
 │   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter

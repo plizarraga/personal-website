@@ -12,7 +12,7 @@ export const OG_IMAGE = {
   path: '/og.png',
   width: 1200,
   height: 630,
-  alt: 'Pedro Lizárraga, Senior Software Engineer | Full-Stack',
+  alt: 'Photo of Pedro Lizárraga beside the name and Headline: Senior Software Engineer | Full-Stack',
 } as const;
 
 /** Turns a site-relative path into an absolute URL on the production domain. */
