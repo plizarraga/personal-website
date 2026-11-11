@@ -28,7 +28,7 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
     <p class="headline">{profile.headline}</p>
     <p class="meta">{profile.location} · {profile.workMode}</p>
     <ul class="actions" aria-label="Contact and CV">
-      <li><a class="primary" href={`mailto:${profile.email}`}>Email me</a></li>
+      <li><a class="button-primary" href={`mailto:${profile.email}`}>Email me</a></li>
       <li class="main-nav"><nav aria-label="Main">{mainNav.map((link) => <a href={link.href}>{link.label}</a>)}</nav></li>
       <li><a href={CV_PDF_PATH} download>Download CV (PDF)</a></li>
       <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
@@ -105,7 +105,7 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
     margin-top: 0;
   }
 
-  .actions a {
+  .actions a:not(.button-primary) {
     display: inline-block;
     padding-block: 0.25rem;
   }
@@ -128,14 +128,6 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
     }
   }
 
-  .actions .primary {
-    padding: 0.5rem 0.95rem;
-    border-radius: 6px;
-    background: var(--accent);
-    color: var(--bg);
-    font-weight: 600;
-    text-decoration: none;
-  }
 
   .timeline {
     margin: 0 0 1rem;
