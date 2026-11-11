@@ -15,7 +15,8 @@
     "check:a11y": "node scripts/check-a11y.mjs",
     "preview": "astro build && wrangler dev",
     "deploy": "astro build && node scripts/check-dist.mjs && node scripts/check-a11y.mjs && wrangler deploy",
-    "og-image": "node scripts/og-image.mjs"
+    "og-image": "node scripts/og-image.mjs",
+    "icons": "node scripts/icons.mjs"
   },
   "dependencies": {
     "@astrojs/markdown-satteri": "^0.4.7",
