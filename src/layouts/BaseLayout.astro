@@ -1,10 +1,10 @@
 ---
-import '../styles/global.css';
-import SiteFooter from '../components/SiteFooter.astro';
-import SiteHeader from '../components/SiteHeader.astro';
-import { profile } from '../data/cv';
-import { OG_IMAGE, absoluteUrl } from '../lib/site';
-import { serializeJsonLd } from '../lib/structured-data';
+import '@/styles/global.css';
+import SiteFooter from '@/layouts/SiteFooter.astro';
+import SiteHeader from '@/layouts/SiteHeader.astro';
+import { profile } from '@/data/cv';
+import { OG_IMAGE, absoluteUrl } from '@/lib/site';
+import { serializeJsonLd } from '@/lib/json-ld';
 
 interface Props {
   title: string;

@@ -1,7 +1,7 @@
 ---
-import ProjectEntry from '../components/ProjectEntry.astro';
-import RoleEntry from '../components/RoleEntry.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectEntry from '@/components/cv/ProjectEntry.astro';
+import RoleEntry from '@/components/cv/RoleEntry.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 import {
   certifications,
   education,
@@ -11,10 +11,10 @@ import {
   skills,
   spokenLanguages,
   summary,
-} from '../data/cv';
-import { formatPartialDate } from '../lib/dates';
-import { CV_PDF_PATH, EXPERIENCE_MARKDOWN_PATH } from '../lib/site';
-import { webPageSchema } from '../lib/structured-data';
+} from '@/data/cv';
+import { formatPartialDate } from '@/lib/dates';
+import { CV_PDF_PATH, EXPERIENCE_MARKDOWN_PATH } from '@/lib/site';
+import { webPageSchema } from '@/lib/cv/structured-data';
 
 const title = `Experience · ${profile.name}, Senior Software Engineer`;
 ---

@@ -97,13 +97,19 @@ Every change to the site's text follows these rules. Terms in bold are defined i
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicon, og.png, CV PDF
-├── scripts/og-image.mjs   # Generates public/og.png
+├── scripts/               # og-image.mjs (public/og.png) and check-dist.mjs (checks dist/ after each build)
 ├── src/
-│   ├── data/              # cv.ts and case-studies.ts: all site content
-│   ├── pages/             # Routes, plus robots.txt, llms.txt, and the .md copies
-│   ├── layouts/           # BaseLayout: meta tags, canonical URL, JSON-LD
-│   ├── components/        # Header, footer, entries, and date ranges
-│   ├── lib/               # site.ts (URLs), structured-data.ts, markdown.ts
+│   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
+│   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter
+│   ├── components/
+│   │   ├── cv/            # RoleEntry, ProjectEntry
+│   │   ├── case-study/    # CaseStudyLink
+│   │   └── DateRange.astro
+│   ├── data/              # cv.ts and case-studies.ts (all site content), navigation.ts
+│   ├── lib/
+│   │   ├── cv/            # Markdown copy and JSON-LD of the CV
+│   │   ├── case-study/    # Paths, Markdown copy, JSON-LD, stack names
+│   │   └── *.ts           # Generic: site URLs, dates, JSON-LD serializer, last updated date
 │   └── styles/            # global.css
 ├── astro.config.mjs       # Site URL, sitemap, URL format
 ├── wrangler.jsonc         # Worker name, assets, custom domain
@@ -117,12 +123,12 @@ The site has no environment variables. These files hold the settings you may cha
 | File | Settings |
 | --- | --- |
 | [`astro.config.mjs`](astro.config.mjs) | `site` (production URL), `trailingSlash: 'never'`, and `build.format: 'file'`, which serve pages at `/experience` with no trailing slash |
-| [`src/lib/site.ts`](src/lib/site.ts) | `SITE_URL`, the CV PDF path, and the Open Graph image |
+| [`src/lib/site.ts`](src/lib/site.ts) | The CV PDF path and the Open Graph image. It reads the production URL from `site` in `astro.config.mjs` |
 | [`wrangler.jsonc`](wrangler.jsonc) | Worker name, the `dist` assets folder, the 404 page, and the custom domain |
 | [`public/_headers`](public/_headers) | Security headers, and the canonical `Link` header of each Markdown copy |
 
 > [!IMPORTANT]
-> `site` in `astro.config.mjs` and `SITE_URL` in `src/lib/site.ts` must match. A new page with a Markdown copy also needs its own rule in `public/_headers`, so the copy points to the HTML page as canonical. `check:dist` fails the build when either is wrong.
+> A new page with a Markdown copy needs its own rule in `public/_headers`, so the copy points to the HTML page as canonical. `check:dist` fails the build when the rule is missing.
 
 ## Deployment
 

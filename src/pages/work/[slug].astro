@@ -1,11 +1,11 @@
 ---
 import type { GetStaticPaths, InferGetStaticPropsType } from 'astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import DateRange from '../../components/DateRange.astro';
-import { caseStudies } from '../../data/case-studies';
-import { profile } from '../../data/cv';
-import { caseStudyMarkdownPath, caseStudyPath } from '../../lib/site';
-import { caseStudySchema } from '../../lib/structured-data';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import DateRange from '@/components/DateRange.astro';
+import { caseStudies } from '@/data/case-studies';
+import { profile } from '@/data/cv';
+import { caseStudyMarkdownPath, caseStudyPath } from '@/lib/case-study/paths';
+import { caseStudySchema } from '@/lib/case-study/structured-data';
 
 export const getStaticPaths = (() =>
   caseStudies.map((study) => ({ params: { slug: study.slug }, props: { study } }))) satisfies GetStaticPaths;

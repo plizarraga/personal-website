@@ -25,13 +25,12 @@ if (!existsSync(dist)) {
   process.exit(1);
 }
 
-// The two copies of the site URL must agree (see "Configuration" in the README).
-const astroSite = read(join(root, 'astro.config.mjs')).match(/site:\s*'([^']+)'/)?.[1];
-const libSite = read(join(root, 'src/lib/site.ts')).match(/SITE_URL\s*=\s*'([^']+)'/)?.[1];
-if (!astroSite || astroSite !== libSite) {
-  fail('site URL', `astro.config.mjs has ${astroSite}, src/lib/site.ts has ${libSite}`);
+// `site` in astro.config.mjs is the single source of the production URL (src/lib/site.ts reads it).
+const site = read(join(root, 'astro.config.mjs')).match(/site:\s*'([^']+)'/)?.[1];
+if (!site) {
+  console.error('check-dist: no `site` found in astro.config.mjs.');
+  process.exit(1);
 }
-const site = libSite ?? astroSite;
 
 const all = files(dist).map((path) => '/' + relative(dist, path));
 const exists = new Set(all);

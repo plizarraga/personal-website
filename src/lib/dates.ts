@@ -1,4 +1,4 @@
-import type { PartialDate } from '../data/cv';
+import type { PartialDate } from '@/data/cv';
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 

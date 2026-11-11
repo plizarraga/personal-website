@@ -1,12 +1,7 @@
-import { certifications, education, knowsAbout, profile } from '../data/cv';
-import { lastUpdated } from './last-updated';
-import type { CaseStudy } from '../data/case-studies';
-import { SITE_URL, absoluteUrl, caseStudyPath } from './site';
-import { techNames } from './stack';
-
-type JsonLd = Record<string, unknown>;
-
-const PERSON_ID = `${SITE_URL}/#person`;
+import { certifications, education, knowsAbout, profile } from '@/data/cv';
+import type { JsonLd } from '@/lib/json-ld';
+import { lastUpdated } from '@/lib/last-updated';
+import { absoluteUrl } from '@/lib/site';
 
 /** The schema.org `Person` that every page is about. */
 export function personSchema(): JsonLd {
@@ -14,7 +9,7 @@ export function personSchema(): JsonLd {
 
   return {
     '@type': 'Person',
-    '@id': PERSON_ID,
+    '@id': absoluteUrl('/#person'),
     name: profile.name,
     alternateName: profile.alternateNames,
     givenName: profile.givenName,
@@ -63,27 +58,4 @@ export function webPageSchema(path: string, name: string): JsonLd {
     dateModified: lastUpdated,
     about: personSchema(),
   };
-}
-
-/** `Article` for a case study, written by Pedro. */
-export function caseStudySchema(study: CaseStudy): JsonLd {
-  const url = absoluteUrl(caseStudyPath(study.slug));
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: `${study.title}: case study`,
-    description: study.summary,
-    url,
-    mainEntityOfPage: url,
-    dateModified: lastUpdated,
-    inLanguage: 'en',
-    keywords: techNames(study.stack),
-    author: personSchema(),
-  };
-}
-
-/** Serializes JSON-LD for a `<script>` tag, escaping `<` so the content cannot close the tag. */
-export function serializeJsonLd(data: JsonLd): string {
-  return JSON.stringify(data).replace(/</g, '\\u003c');
 }
