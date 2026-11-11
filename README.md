@@ -1,0 +1,155 @@
+# pedrolizarraga.com
+
+Pedro Lizárraga's personal-brand website: who he is, what he has built, and how to reach him, readable at a glance by people, search crawlers, and LLMs. Live at [pedrolizarraga.com](https://pedrolizarraga.com).
+
+[Features](#features) · [Quick Start](#quick-start) · [Usage](#usage) · [Content rules](#content-rules) · [Configuration](#configuration) · [Deployment](#deployment) · [Contributing](#contributing)
+
+<!-- TODO: add a screenshot of the home page at docs/images/home.png -->
+
+## Features
+
+- **Static HTML, no JavaScript of its own**: every page is plain HTML and CSS. The only script is the Cloudflare Web Analytics beacon, which Cloudflare injects when it serves each page.
+- **Built for search crawlers**: canonical URLs, a generated sitemap, an open `robots.txt`, and JSON-LD (`Person`, `ProfilePage`, `Article`).
+- **Built for LLMs**: a [`/llms.txt`](https://pedrolizarraga.com/llms.txt) index and a Markdown copy of every page, such as [`/experience.md`](https://pedrolizarraga.com/experience.md).
+- **One source of truth**: every fact comes from the owner's CV Master. See [Content rules](#content-rules).
+- **Document-style design**: one column, system fonts, one accent color, and automatic dark mode.
+
+## Tech stack
+
+| Role | Tool |
+| --- | --- |
+| Framework | [Astro](https://astro.build) 7, static output |
+| Language | TypeScript 6 |
+| Sitemap | `@astrojs/sitemap` |
+| Hosting | Cloudflare Workers static assets, deployed with Wrangler 4 |
+| Open Graph image | `sharp`, run by [`scripts/og-image.mjs`](scripts/og-image.mjs) |
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 22.23.4 or later (the `engines` field in [`package.json`](package.json))
+- pnpm 10.26 or later ([`pnpm-workspace.yaml`](pnpm-workspace.yaml) uses `allowBuilds`)
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/plizarraga/personal-website.git
+   cd personal-website
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   pnpm install
+   ```
+
+3. Start the dev server:
+
+   ```bash
+   pnpm dev
+   ```
+
+   Open http://localhost:4321. If that port is busy, Astro picks the next free one and prints it.
+
+## Usage
+
+| Command | What it does |
+| --- | --- |
+| `pnpm dev` | Dev server with hot reload |
+| `pnpm check` | Type-checks `.astro` and `.ts` files |
+| `pnpm build` | Runs `astro check`, then builds the site into `dist/` |
+| `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
+| `pnpm run deploy` | Builds and deploys to production (see [Deployment](#deployment)) |
+| `pnpm og-image` | Regenerates `public/og.png` after a change to the name, Headline, Differentiators, or Domains |
+
+`pnpm build` writes eight HTML pages plus the files for crawlers and LLMs:
+
+```text
+dist/
+├── index.html, experience.html, 404.html
+├── work/<slug>.html          # one case study per slug
+├── experience.md, work/<slug>.md
+├── llms.txt, robots.txt
+├── sitemap-index.xml, sitemap-0.xml
+└── _headers, og.png, favicon.svg, pedro-lizarraga-cv.pdf
+```
+
+## Content rules
+
+Every change to the site's text follows these rules. Terms in bold are defined in [`GLOSSARY.md`](GLOSSARY.md).
+
+- **The CV Master is the only source.** All content lives in [`src/data/cv.ts`](src/data/cv.ts) and [`src/data/case-studies.ts`](src/data/case-studies.ts). Every fact comes from the **CV Master**, a file in a separate private repo, or from interview answers the owner confirmed. When the CV Master changes, these files are updated by hand.
+- **No invented numbers or names.** Add no metric the owner has not confirmed, and never name a client the owner keeps private.
+- **The AI agent stays "in development"** until it is actually in production.
+- **English only** for now.
+- **Name in the first sentence.** Each page opens by naming the person and what he does ("I'm Pedro Lizárraga, a Senior Software Engineer…"), so the sentence still makes sense when an LLM quotes it out of context.
+- **Full technology names**, spelled as in the CV Master: "TypeScript", not "TS".
+- **No phone number** on the site or in the CV PDF. The PDF is the CV Master's "website" variant, built in the private repo and copied to [`public/pedro-lizarraga-cv.pdf`](public/pedro-lizarraga-cv.pdf).
+- **The same identity everywhere.** The **Canonical name** and **Headline** are worded the same on the site, the CV, LinkedIn, and GitHub.
+- **Nothing that adds weight or tracking**: no client-side JavaScript, cookies, animations, carousels, or modals.
+
+## Repository structure
+
+```text
+personal-website/
+├── public/                # Copied to dist/ as is: _headers, favicon, og.png, CV PDF
+├── scripts/og-image.mjs   # Generates public/og.png
+├── src/
+│   ├── data/              # cv.ts and case-studies.ts: all site content
+│   ├── pages/             # Routes, plus robots.txt, llms.txt, and the .md copies
+│   ├── layouts/           # BaseLayout: meta tags, canonical URL, JSON-LD
+│   ├── components/        # Header, footer, entries, and date ranges
+│   ├── lib/               # site.ts (URLs), structured-data.ts, markdown.ts
+│   └── styles/            # global.css
+├── astro.config.mjs       # Site URL, sitemap, URL format
+├── wrangler.jsonc         # Worker name, assets, custom domain
+└── GLOSSARY.md            # Terms used in code and content
+```
+
+## Configuration
+
+The site has no environment variables. These files hold the settings you may change:
+
+| File | Settings |
+| --- | --- |
+| [`astro.config.mjs`](astro.config.mjs) | `site` (production URL), `trailingSlash: 'never'`, and `build.format: 'file'`, which serve pages at `/experience` with no trailing slash |
+| [`src/lib/site.ts`](src/lib/site.ts) | `SITE_URL`, the CV PDF path, and the Open Graph image |
+| [`wrangler.jsonc`](wrangler.jsonc) | Worker name, the `dist` assets folder, the 404 page, and the custom domain |
+| [`public/_headers`](public/_headers) | Security headers, and the canonical `Link` header of each Markdown copy |
+
+> [!IMPORTANT]
+> `site` in `astro.config.mjs` and `SITE_URL` in `src/lib/site.ts` must match. A new page with a Markdown copy also needs its own rule in `public/_headers`, so the copy points to the HTML page as canonical.
+
+## Deployment
+
+Deploys are manual; there is no CI. `pnpm run deploy` needs a Wrangler session (`wrangler login`) with access to the owner's Cloudflare account. Use `pnpm run deploy`, not `pnpm deploy`: `pnpm deploy` is a different, built-in pnpm command.
+
+Everything outside the code lives in Cloudflare and the search consoles:
+
+| Component | Platform | Notes |
+| --- | --- | --- |
+| Site | Cloudflare Workers, Worker `personal-website` | `pedrolizarraga.com` is a custom domain. Because `wrangler.jsonc` has `routes`, Wrangler turns off the `workers.dev` URL on every deploy |
+| Domain | Cloudflare Registrar | Renews automatically every November |
+| `www` redirect | Cloudflare Redirect Rule "Redirect www to root" | 301 to `https://pedrolizarraga.com`, keeping the path and query string |
+| Email | Cloudflare Email Routing | `hello@pedrolizarraga.com` forwards to the owner's inbox. Receive only; the catch-all is off |
+| Analytics | Cloudflare Web Analytics | Beacon injected automatically, no cookies. No click events or UTM tracking. Injection stops if HTML responses send `Cache-Control: no-transform` |
+| Search | Google Search Console (domain property) and Bing Webmaster Tools | `sitemap-index.xml` submitted to both |
+
+> [!WARNING]
+> Keep these DNS records: the `google-site-verification` TXT record on the apex, the Bing `<id>.pedrolizarraga.com` CNAME to `verify.bing.com`, and the Email Routing MX, SPF, and DKIM records. Deleting a verification record un-verifies the site in that console. Each verification record has a comment in Cloudflare that says what it is for.
+
+Known gaps:
+
+- HTTP is not redirected to HTTPS: "Always Use HTTPS" is off, so `http://pedrolizarraga.com/` returns 200.
+- `public/_headers` still sets `noindex` on the `workers.dev` URL, which is now turned off. The rule does nothing until that URL is turned back on.
+
+## Contributing
+
+This is a personal site maintained by its owner. Changes go through a pull request:
+
+- Branch names follow `type/description`, such as `feat/new-case-study`.
+- Commits follow [Conventional Commits](https://www.conventionalcommits.org).
+- Run `pnpm build` before opening a PR; it runs `astro check` first.
