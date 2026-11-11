@@ -2,17 +2,53 @@
 import { profile } from '@/data/cv';
 import { formatDay } from '@/lib/dates';
 import { lastUpdated } from '@/lib/last-updated';
+import { mainNav } from '@/data/navigation';
+import { CV_PDF_PATH } from '@/lib/site';
+
+interface Props {
+  /** Path of the current page, to mark its navigation link. */
+  currentPath?: string;
+}
+
+const { currentPath } = Astro.props;
+// Contact first (the one call to action), then the site's sections and profiles in two short columns: on small
+// screens the header is only "← Home", so this is the way on from any page. Chosen from the prototypes on branch
+// prototype/footer-variants.
 ---
 
 <footer class="site-footer" id="contact">
   <div class="container">
-    <h2>Contact</h2>
-    <ul class="inline-list">
-      <li><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
-      <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
-      <li><a href={profile.github.url} rel="me">{profile.github.label}</a></li>
-    </ul>
-    <p class="meta">© {lastUpdated.slice(0, 4)} {profile.name} · Last updated <time datetime={lastUpdated}>{formatDay(lastUpdated)}</time></p>
-    <p class="meta">No cookies. Privacy-friendly analytics.</p>
+    <h2>Get in touch</h2>
+    <p class="footer-cta">
+      <a class="button-primary" href={`mailto:${profile.email}`}>Email me</a>
+      <span class="meta">{profile.email}</span>
+    </p>
+    <div class="footer-columns">
+      <nav aria-label="Footer">
+        <h3 class="footer-label">Site</h3>
+        <ul class="plain-list">
+          {
+            mainNav.map((link) => (
+              <li>
+                <a href={link.href} aria-current={currentPath === link.href ? 'page' : undefined}>
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href={CV_PDF_PATH} download>CV (PDF)</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h3 class="footer-label">Profiles</h3>
+        <ul class="plain-list">
+          <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
+          <li><a href={profile.github.url} rel="me">{profile.github.label}</a></li>
+        </ul>
+      </div>
+    </div>
+    <p class="meta footer-fine">
+      © {lastUpdated.slice(0, 4)} {profile.name} · Last updated <time datetime={lastUpdated}>{formatDay(lastUpdated)}</time> · No cookies
+    </p>
   </div>
 </footer>
