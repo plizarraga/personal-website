@@ -1,6 +1,6 @@
 import { personSchema } from '@/lib/cv/structured-data';
 import type { JsonLd } from '@/lib/json-ld';
-import type { Post } from '@/lib/post/collection';
+import { publicationDateTime, type Post } from '@/lib/post/collection';
 import { BLOG_PATH, postPath } from '@/lib/post/paths';
 import { absoluteUrl } from '@/lib/site';
 
@@ -16,8 +16,8 @@ export function postSchema(post: Post): JsonLd {
     description: data.summary,
     url,
     mainEntityOfPage: url,
-    datePublished: data.published,
-    dateModified: data.updated ?? data.published,
+    datePublished: publicationDateTime(data.published),
+    dateModified: publicationDateTime(data.updated ?? data.published),
     inLanguage: 'en',
     keywords: data.tags,
     author: personSchema(),
@@ -40,7 +40,7 @@ export function blogSchema(posts: Post[], name: string): JsonLd {
       '@type': 'BlogPosting',
       headline: post.data.title,
       url: absoluteUrl(postPath(post.id)),
-      datePublished: post.data.published,
+      datePublished: publicationDateTime(post.data.published),
     })),
   };
 }

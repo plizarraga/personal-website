@@ -2,6 +2,8 @@
 
 Read [`README.md`](README.md) before changing the site: its "Content rules" section says where every fact comes from, and [`GLOSSARY.md`](GLOSSARY.md) defines the terms used in code and content.
 
+To write or schedule a blog post, follow README "Publishing a post": drafts stay on their own branch, and `published` is the day the post goes live, in Pacific time.
+
 Cloudflare and search-console settings live outside the repo. Read the live zone state through the Cloudflare MCP before advising on it, and record every change in the table under README "Deployment" in the same change.
 
 ## Dependabot

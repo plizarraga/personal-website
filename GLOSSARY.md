@@ -51,3 +51,15 @@ _Avoid_: portfolio item, project page, post, article
 **Post**:
 An article on the blog, written by Pedro, about one decision in a Project: what he chose, what it cost, and what went wrong. Its facts come from the Project's repository, not from the CV Master. A Post goes deeper than its Case study and links to it; it does not repeat it.
 _Avoid_: article, entry, case study
+
+**Draft**:
+A Post still being written or reviewed. It has no Publication date and does not exist on the site.
+_Avoid_: unpublished post, WIP
+
+**Scheduled post**:
+A finished Post whose Publication date has not arrived yet. It appears on the site on that date, with no further edit.
+_Avoid_: queued post, pending post
+
+**Publication date**:
+The day a Post appears on the site, not the day it was written.
+_Avoid_: post date, created date

@@ -105,6 +105,15 @@ Every change to the site's text follows these rules. Terms in bold are defined i
 - **The same identity everywhere.** The **Canonical name** and **Headline** are worded the same on the site, the CV, LinkedIn, and GitHub.
 - **Nothing that adds weight or tracking**: no client-side JavaScript, cookies, animations, carousels, or modals.
 
+### Publishing a post
+
+The repo is public, so anything on `main` can be read on GitHub, whether or not the site shows it.
+
+1. **Draft**: write the post on its own branch, `feat/post-<slug>`, in `src/content/posts/<slug>.md`. Do not merge it to `main` while it is being written.
+2. **Review**: open a PR. Set `published` to the **Publication date**, the day the post should appear, in Pacific time (`America/Los_Angeles`). CI builds every post, including future ones, so `check:dist` and `check:a11y` check it now. Commit as `feat(blog): add post "<title>"`.
+3. **Scheduled post**: merge the PR. While `published` is after today, `pnpm run deploy` leaves the post out of every page, the sitemap, `llms.txt`, and the JSON-LD (`HIDE_SCHEDULED=true`, read in [`src/lib/post/collection.ts`](src/lib/post/collection.ts)). `pnpm dev` and `pnpm build` show it.
+4. **Published**: the post appears on the first deploy on or after its Publication date. Deploys are manual for now (see [Deployment](#deployment)), so run `pnpm run deploy` that day.
+
 ## Repository structure
 
 ```text
