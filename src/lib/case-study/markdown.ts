@@ -1,34 +1,29 @@
-import type { CaseStudy } from '@/data/case-studies';
 import { profile } from '@/data/cv';
+import type { CaseStudy } from '@/lib/case-study/collection';
 import { caseStudyPath } from '@/lib/case-study/paths';
 import { formatDateRange } from '@/lib/dates';
-import { bulletList } from '@/lib/markdown';
 import { EXPERIENCE_MARKDOWN_PATH, absoluteUrl } from '@/lib/site';
 
-/** A case study as Markdown, served at `/work/<slug>.md` for LLMs and agents. */
+/** A case study as Markdown, served at `/work/<slug>.md` for LLMs and agents: a header from the frontmatter, then the file's body. */
 export function caseStudyMarkdown(study: CaseStudy): string {
-  const status = study.status ? ` (${study.status})` : '';
+  const { data } = study;
+  const status = data.status ? ` (${data.status})` : '';
   const lines = [
-    `# ${study.title}: case study`,
+    `# ${data.title}: case study`,
     '',
-    `${study.role}, ${study.organization} · ${formatDateRange(study.start, study.end)}${status}${study.note ? ` · ${study.note}` : ''}`,
+    `${data.role}, ${data.organization} · ${formatDateRange(data.start, data.end)}${status}${data.note ? ` · ${data.note}` : ''}`,
     '',
-    `By ${profile.name} · HTML version: ${absoluteUrl(caseStudyPath(study.slug))} · All experience: ${absoluteUrl(EXPERIENCE_MARKDOWN_PATH)}`,
+    `By ${profile.name} · HTML version: ${absoluteUrl(caseStudyPath(study.id))} · All experience: ${absoluteUrl(EXPERIENCE_MARKDOWN_PATH)}`,
     '',
-    study.summary,
+    data.summary,
     '',
-    ...(study.repository ? [`Source code: ${study.repository.url}`, ''] : []),
-    ...(study.productSite ? [`Product site: ${study.productSite.url}`, ''] : []),
-    ...study.sections.flatMap((section) => [
-      `## ${section.heading}`,
-      '',
-      ...(section.paragraphs ?? []).flatMap((paragraph) => [paragraph, '']),
-      ...(section.steps ? [...section.steps.map((step, i) => `${i + 1}. ${step}`), ''] : []),
-      ...(section.bullets ? [...bulletList(section.bullets), ''] : []),
-    ]),
+    ...(data.repository ? [`Source code: ${data.repository.url}`, ''] : []),
+    ...(data.productSite ? [`Product site: ${data.productSite.url}`, ''] : []),
+    (study.body ?? '').trim(),
+    '',
     '## Stack',
     '',
-    study.stack.join(', '),
+    data.stack.join(', '),
     '',
   ];
 

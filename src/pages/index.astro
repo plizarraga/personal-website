@@ -1,16 +1,17 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import DateRange from '@/components/DateRange.astro';
-import { caseStudies } from '@/data/case-studies';
 import { profile, roles, summary } from '@/data/cv';
 import { mainNav } from '@/data/navigation';
+import { getCaseStudies } from '@/lib/case-study/collection';
 import { caseStudyPath } from '@/lib/case-study/paths';
 import { CV_PDF_PATH } from '@/lib/site';
 import { techNames } from '@/lib/case-study/stack';
 import { profilePageSchema } from '@/lib/cv/structured-data';
 
 const recentRoles = roles.slice(0, 3);
-const agent = caseStudies.find((study) => study.slug === 'ai-appointment-agent');
+const caseStudies = await getCaseStudies();
+const agent = caseStudies.find((study) => study.id === 'ai-appointment-agent');
 /** Short stack line: the first seven technology names. */
 const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
 ---
@@ -43,7 +44,7 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
         <p>
           I also build AI agents for businesses as a freelancer, using the Vercel AI SDK. I am building a WhatsApp
           appointment agent for a dental clinic, which is still in development.{' '}
-          <a href={caseStudyPath(agent.slug)}>Read the {agent.title} case study</a>.
+          <a href={caseStudyPath(agent.id)}>Read the {agent.data.title} case study</a>.
         </p>
       )
     }
@@ -56,12 +57,12 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
         caseStudies.map((study) => (
           <li class="entry">
             <h3>
-              <a href={caseStudyPath(study.slug)}>{study.title}</a>
-              {study.status && <span class="meta status"> · {study.status}</span>}
+              <a href={caseStudyPath(study.id)}>{study.data.title}</a>
+              {study.data.status && <span class="meta status"> · {study.data.status}</span>}
             </h3>
-            <p>{study.summary}</p>
+            <p>{study.data.summary}</p>
             <p class="env">
-              <span class="stack-label">Stack:</span> {stackLine(study.stack)}
+              <span class="stack-label">Stack:</span> {stackLine(study.data.stack)}
             </p>
           </li>
         ))

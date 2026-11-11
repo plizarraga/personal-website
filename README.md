@@ -82,7 +82,7 @@ dist/
 
 Every change to the site's text follows these rules. Terms in bold are defined in [`GLOSSARY.md`](GLOSSARY.md).
 
-- **The CV Master is the only source.** All content lives in [`src/data/cv.ts`](src/data/cv.ts) and [`src/data/case-studies.ts`](src/data/case-studies.ts). Every fact comes from the **CV Master**, a file in a separate private repo, or from interview answers the owner confirmed. When the CV Master changes, these files are updated by hand.
+- **The CV Master is the only source.** All content lives in [`src/data/cv.ts`](src/data/cv.ts) and in one Markdown file per case study in [`src/content/case-studies/`](src/content/case-studies), whose frontmatter fields are defined in [`src/content.config.ts`](src/content.config.ts). Every fact comes from the **CV Master**, a file in a separate private repo, or from interview answers the owner confirmed. When the CV Master changes, these files are updated by hand.
 - **No invented numbers or names.** Add no metric the owner has not confirmed, and never name a client the owner keeps private.
 - **The AI agent stays "in development"** until it is actually in production.
 - **English only** for now.
@@ -105,12 +105,14 @@ personal-website/
 │   │   ├── cv/            # RoleEntry, ProjectEntry
 │   │   ├── case-study/    # CaseStudyLink
 │   │   └── DateRange.astro
-│   ├── data/              # cv.ts and case-studies.ts (all site content), navigation.ts
+│   ├── content/           # case-studies/*.md: one file per case study
+│   ├── data/              # cv.ts (all CV content), navigation.ts
 │   ├── lib/
 │   │   ├── cv/            # Markdown copy and JSON-LD of the CV
 │   │   ├── case-study/    # Paths, Markdown copy, JSON-LD, stack names
 │   │   └── *.ts           # Generic: site URLs, dates, JSON-LD serializer, last updated date
-│   └── styles/            # global.css
+│   ├── styles/            # global.css
+│   └── content.config.ts  # Case study frontmatter schema
 ├── astro.config.mjs       # Site URL, sitemap, URL format
 ├── wrangler.jsonc         # Worker name, assets, custom domain
 └── GLOSSARY.md            # Terms used in code and content
