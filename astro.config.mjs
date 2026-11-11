@@ -18,8 +18,13 @@ export default defineConfig({
   markdown: {
     // Keep straight quotes and hyphens exactly as written in the case studies.
     processor: satteri({ features: { smartPunctuation: false } }),
-    // Code blocks use the site's own colors (see `.post pre` in global.css). Shiki's themes add inline colors that
-    // fail the contrast check and a dark block that ignores the light theme.
-    syntaxHighlight: false,
+    // Shiki with a light and a dark theme, switched by `prefers-color-scheme` like the rest of the site (see `.post pre`
+    // in global.css). `defaultColor: false` emits only CSS variables, so the block keeps the site's background. The
+    // themes are picked for contrast on that background: comments in `github-dark` and `github-light-default` fail it.
+    syntaxHighlight: 'shiki',
+    shikiConfig: {
+      themes: { light: 'github-light-high-contrast', dark: 'github-dark-default' },
+      defaultColor: false,
+    },
   },
 });

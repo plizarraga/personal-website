@@ -55,18 +55,27 @@ I picked the third. The model leads the conversation and chooses actions from a 
 **Identity never comes from the model.** Each tool receives a context that the code builds from the signed webhook. Tool input schemas are strict, so an undeclared argument such as `identity` rejects the call.
 
 ```ts
-/** What the code hands to every tool. It never comes from the model's arguments. */
+/**
+ * What the code hands to every tool.
+ * It never comes from the model's arguments.
+ */
 interface ToolContext {
-  /** The contact's identity, set by the code from the signed webhook. */
+  /** The contact, set by the code from the signed webhook. */
   identity: string;
-  /** This turn's id. Offers store it, so a confirmation must arrive in a later turn. */
+  /**
+   * This turn's id. Offers store it, so a confirmation
+   * must arrive in a later turn.
+   */
   turn: string;
   now: Date;
   signal: AbortSignal;
   requestHandoff(reason?: string, message?: string): void;
 }
 
-/** What a tool with an effect must declare: which offer it validates and how it is confirmed. */
+/**
+ * What a tool with an effect must declare:
+ * which offer it validates and how it is confirmed.
+ */
 interface ToolEffect {
   validates: string;
   confirmedBy: string;
@@ -76,8 +85,11 @@ interface ToolEffect {
 **Effects only act on what the code offered.** A booking tool can only book a time slot from the current offer in this conversation, and only after the contact confirmed it in a later message. The code checks both, and the write is atomic. The catalog refuses to start if a tool with an effect does not say what it validates:
 
 ```ts
-if (tool.effect && !(tool.effect.validates.trim() && tool.effect.confirmedBy.trim())) {
-  throw new Error(`Tool "${name}" has an effect: declare which offer it validates and how it is confirmed`);
+const { effect } = tool;
+if (effect && !(effect.validates.trim() && effect.confirmedBy.trim())) {
+  throw new Error(
+    `Tool "${name}": declare what its effect validates and how it is confirmed`,
+  );
 }
 ```
 

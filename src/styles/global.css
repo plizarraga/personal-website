@@ -296,7 +296,8 @@ main {
   white-space: nowrap;
 }
 
-/* Post bodies: code and tables. Code wraps instead of scrolling, so no block needs keyboard scrolling on a phone. */
+/* Post bodies: code and tables. Code keeps its line breaks and scrolls sideways; Shiki gives each block
+   `tabindex="0"`, so the keyboard can scroll it too. */
 .post code {
   font-family: var(--mono);
   font-size: 0.875em;
@@ -307,13 +308,26 @@ main {
   padding: 0.75rem 1rem;
   border: 1px solid var(--border);
   border-radius: 4px;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
+  overflow-x: auto;
+  white-space: pre;
   line-height: 1.45;
 }
 
 .post pre code {
   font-size: 0.8rem;
+}
+
+/* Syntax colors from the Shiki themes in astro.config.mjs, on the site's own background. */
+.post .astro-code,
+.post .astro-code span {
+  color: var(--shiki-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  .post .astro-code,
+  .post .astro-code span {
+    color: var(--shiki-dark);
+  }
 }
 
 .post table {
