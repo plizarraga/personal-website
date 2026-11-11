@@ -36,6 +36,14 @@ _Avoid_: sector, industry, vertical, niche, finance (say electronic invoicing)
 Pedro's master CV, the single source of every fact on the site. A fact, metric, or technology absent from the CV Master does not appear on the site.
 _Avoid_: base CV, main CV, resume
 
+**Role**:
+A position Pedro held at one company, with a title and dates, as listed in the CV Master. A Role may contain Projects.
+_Avoid_: job, position, experience (that is the page that lists the Roles)
+
+**Project**:
+One piece of work, done either within a Role or on Pedro's own as a selected project. A Project may be told in full by a Case study, but it is not one.
+_Avoid_: portfolio item, product
+
 **Case study**:
 A page that explains one project in depth (context, Pedro's role, decisions, outcome), built only from CV Master facts.
 _Avoid_: portfolio item, project page, post, article
