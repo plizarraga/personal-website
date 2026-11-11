@@ -37,14 +37,28 @@ export function personSchema(): JsonLd {
   };
 }
 
-/** `ProfilePage` for the home page, following Google's profile page guidelines. */
-export function profilePageSchema(): JsonLd {
+/**
+ * JSON-LD for the home page: the `ProfilePage` (Google's profile page guidelines) and the `WebSite`,
+ * whose `name` is the site name Google shows above results instead of the bare domain.
+ */
+export function homePageSchema(): JsonLd {
   return {
     '@context': 'https://schema.org',
-    '@type': 'ProfilePage',
-    url: absoluteUrl('/'),
-    dateModified: lastUpdated,
-    mainEntity: personSchema(),
+    '@graph': [
+      {
+        '@type': 'ProfilePage',
+        url: absoluteUrl('/'),
+        dateModified: lastUpdated,
+        mainEntity: personSchema(),
+      },
+      {
+        '@type': 'WebSite',
+        '@id': absoluteUrl('/#website'),
+        name: profile.name,
+        alternateName: profile.alternateNames,
+        url: absoluteUrl('/'),
+      },
+    ],
   };
 }
 

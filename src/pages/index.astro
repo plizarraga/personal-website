@@ -7,7 +7,7 @@ import { getCaseStudies } from '@/lib/case-study/collection';
 import { caseStudyPath } from '@/lib/case-study/paths';
 import { CV_PDF_PATH } from '@/lib/site';
 import { techNames } from '@/lib/case-study/stack';
-import { profilePageSchema } from '@/lib/cv/structured-data';
+import { homePageSchema } from '@/lib/cv/structured-data';
 
 const recentRoles = roles.slice(0, 3);
 const caseStudies = await getCaseStudies();
@@ -17,11 +17,11 @@ const stackLine = (stack: string[]) => techNames(stack).slice(0, 7).join(', ');
 ---
 
 <BaseLayout
-  title={`${profile.name} · Senior Software Engineer, Full-Stack`}
+  title={`${profile.name} · ${profile.headline}`}
   description="Senior Full-Stack Software Engineer with 15+ years across healthcare (Epic FHIR), B2B commerce, electronic invoicing, and AI agents. TypeScript, Node.js."
   path="/"
   ogType="profile"
-  jsonLd={profilePageSchema()}
+  jsonLd={homePageSchema()}
 >
   <section aria-labelledby="name">
     <h1 id="name">{profile.name}</h1>
