@@ -1,6 +1,7 @@
 ---
-import { lastUpdated, profile } from '../data/cv';
+import { profile } from '../data/cv';
 import { formatDay } from '../lib/dates';
+import { lastUpdated } from '../lib/last-updated';
 ---
 
 <footer class="site-footer" id="contact">
@@ -11,6 +12,7 @@ import { formatDay } from '../lib/dates';
       <li><a href={profile.linkedin.url} rel="me">{profile.linkedin.label}</a></li>
       <li><a href={profile.github.url} rel="me">{profile.github.label}</a></li>
     </ul>
-    <p class="meta">Last updated <time datetime={lastUpdated}>{formatDay(lastUpdated)}</time></p>
+    <p class="meta">© {lastUpdated.slice(0, 4)} {profile.name} · Last updated <time datetime={lastUpdated}>{formatDay(lastUpdated)}</time></p>
+    <p class="meta">No cookies. Privacy-friendly analytics.</p>
   </div>
 </footer>

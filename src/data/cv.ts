@@ -51,9 +51,6 @@ export interface Certification {
   date?: PartialDate;
 }
 
-/** Date the CV Master was last rebuilt; shown as the site's last update. */
-export const lastUpdated = '2026-11-10';
-
 export const profile = {
   name: 'Pedro Lizárraga',
   givenName: 'Pedro',
