@@ -72,7 +72,8 @@ Pedro Lizárraga's personal-brand website: who he is, what he has built, and how
 | `pnpm check:dist` | Checks the built site in `dist/`: one `<h1>`, titles and descriptions within length, canonicals, JSON-LD, sitemap, Markdown copies, internal links, `<link>` files, `favicon.ico` and `apple-touch-icon.png` |
 | `pnpm check:a11y` | Runs axe-core on every page in `dist/`, in light and dark mode at desktop and phone widths, and fails on any WCAG 2.2 A or AA violation, including color contrast |
 | `pnpm preview` | Builds and serves `dist/` with `wrangler dev`, the local Workers runtime |
-| `pnpm run deploy` | Builds and deploys to production (see [Deployment](#deployment)) |
+| `pnpm run deploy` | Builds and deploys to production, then submits the sitemap URLs to IndexNow (see [Deployment](#deployment)) |
+| `pnpm indexnow` | Submits the URLs in `dist/sitemap-0.xml` to IndexNow without deploying |
 | `pnpm og-image` | Regenerates `public/og.png` after a change to the name, Headline, or photo (`scripts/og-photo.jpg`) |
 | `pnpm icons` | Regenerates `public/favicon.ico` and `public/apple-touch-icon.png` from `public/favicon.svg` |
 
@@ -85,7 +86,7 @@ dist/
 ├── experience.md, work/<slug>.md
 ├── llms.txt, robots.txt
 ├── sitemap-index.xml, sitemap-0.xml
-└── _headers, og.png, favicon.svg, favicon.ico, apple-touch-icon.png, pedro-lizarraga-cv.pdf
+└── _headers, og.png, favicon.svg, favicon.ico, apple-touch-icon.png, pedro-lizarraga-cv.pdf, <IndexNow key>.txt
 ```
 
 ## Content rules
@@ -107,7 +108,7 @@ Every change to the site's text follows these rules. Terms in bold are defined i
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicons, og.png, CV PDF
-├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-dist.mjs and check-a11y.mjs (check dist/ after each build)
+├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-dist.mjs and check-a11y.mjs (check dist/ after each build), indexnow.mjs (after each deploy)
 ├── src/
 │   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
 │   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter
@@ -158,7 +159,7 @@ Everything outside the code lives in Cloudflare and the search consoles:
 | Analytics | Cloudflare Web Analytics | Beacon injected automatically, no cookies. No click events or UTM tracking |
 | Bots | Cloudflare Bot Fight Mode, with JavaScript Detections | Challenges known bad bots; verified crawlers such as Googlebot and Bingbot pass. Bot Fight Mode requires JavaScript Detections. AI crawlers are allowed: "Block AI bots" and the Cloudflare-managed `robots.txt` are off |
 | Speed | Cloudflare Speed Brain and 0-RTT | Speed Brain prefetches the likely next page through a `Speculation-Rules` header; 0-RTT resumes TLS connections for returning visitors |
-| Search | Google Search Console (domain property) and Bing Webmaster Tools | `sitemap-index.xml` submitted to both |
+| Search | Google Search Console (domain property), Bing Webmaster Tools, and IndexNow | `sitemap-index.xml` submitted to both consoles. Every deploy submits the sitemap URLs to IndexNow (`scripts/indexnow.mjs`), which Bing, and through it DuckDuckGo, picks up. The key file is `public/<key>.txt`; renaming or deleting it breaks the submission |
 
 > [!WARNING]
 > The Web Analytics beacon and the JavaScript Detections script reach the page only because Cloudflare can inject them into the HTML. A `Content-Security-Policy` in `public/_headers` must allow the beacon from `static.cloudflareinsights.com` and the inline JavaScript Detections script, which loads more from `/cdn-cgi/challenge-platform/`. HTML responses must not send `Cache-Control: no-transform`, or both scripts stop without any error.
