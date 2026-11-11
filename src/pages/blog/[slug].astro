@@ -14,7 +14,9 @@ export const getStaticPaths = (async () =>
 
 const { post } = Astro.props as InferGetStaticPropsType<typeof getStaticPaths>;
 const { data } = post;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+/** Table of contents: the post's sections, shown when there are enough to need one. */
+const sections = headings.filter((heading) => heading.depth === 2);
 /** The name is dropped from long titles so search results do not truncate them (about 60 characters). */
 const fullTitle = `${data.title} · ${profile.name}`;
 const title = fullTitle.length <= 60 ? fullTitle : data.title;
@@ -28,6 +30,21 @@ const title = fullTitle.length <= 60 ? fullTitle : data.title;
       {data.updated && <> · Updated <time datetime={data.updated}>{formatDay(data.updated)}</time></>}
     </p>
     <p class="lede">{data.summary}</p>
+
+    {
+      sections.length >= 3 && (
+        <nav class="toc" aria-labelledby="toc-title">
+          <h2 id="toc-title" class="toc-title">Contents</h2>
+          <ol>
+            {sections.map((section) => (
+              <li>
+                <a href={`#${section.slug}`}>{section.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
 
     <Content />
 

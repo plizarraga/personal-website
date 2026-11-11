@@ -345,3 +345,31 @@ main {
   vertical-align: top;
   font-variant-numeric: tabular-nums;
 }
+
+/* A post's table of contents: its `##` sections, as a compact numbered list between the lede and the body. */
+.toc {
+  margin: 1.5rem 0 2rem;
+  padding: 0.75rem 1rem;
+  border-left: 2px solid var(--border);
+}
+
+.toc .toc-title {
+  margin: 0 0 0.4rem;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.toc ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.95rem;
+}
+
+/* Inline links, so the number lines up with a title that wraps; the item padding keeps the tap target. */
+.toc li {
+  padding-block: 0.2rem;
+}
