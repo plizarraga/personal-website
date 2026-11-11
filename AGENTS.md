@@ -20,3 +20,17 @@ Cloudflare and search-console settings live outside the repo. Read the live zone
   ```
 
 - **Re-run, do not investigate:** `ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION` (a transitive package is younger than pnpm's 1-day `minimumReleaseAge`; re-run CI the next day) and network timeouts during install (`gh run rerun <id> --failed`).
+
+## Agent skills
+
+### Issue tracker
+
+Issues are tracked in GitHub Issues for `plizarraga/personal-website`, managed with `gh`. See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+The five default labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `GLOSSARY.md` at the root and `docs/adr/`. See `docs/agents/domain.md`.
