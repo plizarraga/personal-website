@@ -98,6 +98,10 @@ export const skills: SkillGroup[] = [
     items: ['AI agents', 'LLM applications', 'OpenAI APIs', 'Vercel AI SDK', 'tool calling', 'RAG', 'workflow automation'],
   },
   {
+    label: 'AI-Assisted Development',
+    items: ['Claude Code', 'OpenCode'],
+  },
+  {
     label: 'Testing & Delivery',
     items: ['Jest', 'Vitest', 'Playwright', 'Testcontainers', 'Docker', 'GitHub Actions', 'Bitrise', 'Azure DevOps', 'Git', 'CI/CD', 'Agile', 'Scrum', 'Kanban', 'Jira'],
   },
