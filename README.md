@@ -96,7 +96,7 @@ dist/
 
 Every change to the site's text follows these rules. Terms in bold are defined in [`GLOSSARY.md`](GLOSSARY.md).
 
-- **The CV Master is the only source of the CV and the case studies.** That content lives in [`src/data/cv.ts`](src/data/cv.ts) and in one Markdown file per case study in [`src/content/case-studies/`](src/content/case-studies), whose frontmatter fields are defined in [`src/content.config.ts`](src/content.config.ts). Every fact comes from the **CV Master**, a file in a separate private repo, or from interview answers the owner confirmed. When the CV Master changes, these files are updated by hand.
+- **The CV Master is the only source of the CV and the case studies.** That content lives in [`src/data/cv.ts`](src/data/cv.ts) and in one Markdown file per case study in [`src/content/case-studies/`](src/content/case-studies), whose frontmatter fields are defined in [`src/content.config.ts`](src/content.config.ts). Every fact comes from the **CV Master**, a file in a separate private repo, or from interview answers the owner confirmed. When the CV Master changes, these files are updated by hand: see [Syncing the CV Master](#syncing-the-cv-master).
 - **Posts cite their project.** A **Post** in [`src/content/posts/`](src/content/posts) is the owner's own writing. Its facts and numbers come from the project's repository (decision records, commits, issues, measurements), and the post says what was measured and how. Code from a private repository is quoted only from generic modules, translated, never from client data. A post never contradicts its case study: fix the case study in the same change.
 - **No invented numbers or names.** Add no metric the owner has not confirmed, and never name a client the owner keeps private. No client data (prices, addresses, staff names) and no real conversations, even anonymized.
 - **The AI agent stays "in development"** until it is actually in production.
@@ -137,12 +137,21 @@ Every post looks and reads the same. To change a rule, change this list and the 
 
 `/blog` lists every published post, newest first by `published`, each with its title, Publication date, and `summary`. Scheduled posts are left out of production (see [Publishing a post](#publishing-a-post)). The list is [`src/pages/blog/index.astro`](src/pages/blog/index.astro); its order and filter are `getPosts()` in [`src/lib/post/collection.ts`](src/lib/post/collection.ts), which every page, `llms.txt`, and the JSON-LD share.
 
+### Syncing the CV Master
+
+The **CV Master** is `master/CV_MASTER.md` in the private career repo, expected at `../career` next to this one. Edit the master first, never `src/data/cv.ts` alone: `pnpm run check:cv-master` fails when a bullet in `cv.ts` is not word for word in the master. `pnpm run deploy` runs it (skipped when `../career` is absent, as in CI).
+
+1. In `../career`, change `master/CV_MASTER.md`, then the same lines in `applications/*-website/CV.md` and `applications/*-general-purpose/CV.md`, and rebuild their DOCX and PDF (see that repo's `CLAUDE.md`). Open a PR there.
+2. Here, change `src/data/cv.ts` and the case studies in `src/content/case-studies/` to match.
+3. Copy `../career/applications/*-website/Pedro_Lizarraga_CV.pdf` to `public/pedro-lizarraga-cv.pdf`.
+4. Open a PR, merge it, then deploy (see [Deployment](#deployment)).
+
 ## Repository structure
 
 ```text
 personal-website/
 ├── public/                # Copied to dist/ as is: _headers, favicons, og.png, CV PDF
-├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-deploy-branch.mjs (deploys only from main), check-posts.mjs (checks post sources before each build), check-dist.mjs and check-a11y.mjs (check dist/ after each build), screenshot.mjs and lib/serve-dist.mjs (serve dist/ in Chromium), indexnow.mjs (after each deploy)
+├── scripts/               # og-image.mjs and og-photo.jpg (public/og.png), icons.mjs (favicon.ico, apple-touch-icon.png), check-deploy-branch.mjs (deploys only from main), check-cv-master.mjs (checks cv.ts against the CV Master before each deploy), check-posts.mjs (checks post sources before each build), check-dist.mjs and check-a11y.mjs (check dist/ after each build), screenshot.mjs and lib/serve-dist.mjs (serve dist/ in Chromium), indexnow.mjs (after each deploy)
 ├── src/
 │   ├── pages/             # Routes only, plus robots.txt, llms.txt, and the .md copies
 │   ├── layouts/           # BaseLayout (meta tags, canonical URL, JSON-LD), SiteHeader, SiteFooter
